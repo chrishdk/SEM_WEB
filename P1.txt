@@ -10,3 +10,4 @@ python manage.py startapp app
 python manage.py runserver
 
 
+python .\manage.py inspectdb > .\app\models.py
