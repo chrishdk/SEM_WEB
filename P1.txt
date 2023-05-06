@@ -1,0 +1,12 @@
+#instalacion Django
+pip install django 
+
+django-admin startproject "nombreDelProyecto"
+
+#crear el primer modulo
+python manage.py startapp app
+
+#inciar servidor
+python manage.py runserver
+
+
