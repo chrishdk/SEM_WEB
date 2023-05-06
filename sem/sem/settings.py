@@ -75,12 +75,12 @@ WSGI_APPLICATION = 'sem.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'projectsem_high',
-        'USER': 'ADMIN',
-        'PASSWORD': 'PadreAlonsoDeOvalle11**'
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.oracle',
+    #     'NAME': 'projectsem_high',
+    #     'USER': 'ADMIN',
+    #     'PASSWORD': 'PadreAlonsoDeOvalle11**'
+    # }
 }
 
 
