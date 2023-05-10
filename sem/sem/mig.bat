@@ -1,0 +1,1 @@
+python .\manage.py inspectdb > .\app\models.py
