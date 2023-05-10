@@ -1,0 +1,1 @@
+c:/Proyecto/P1/sem/sem_venv/Scripts/activate.bat
