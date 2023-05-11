@@ -1,0 +1,1 @@
+c:/Proyecto/P1/Django/sem_venv/Scripts/activate.bat
