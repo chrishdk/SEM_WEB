@@ -125,6 +125,7 @@ class DjangoSession(models.Model):
 class Tabla(models.Model):
     id = models.FloatField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=True, null=True)
+    imagen = models.BinaryField(blank=True, null=True)
 
     class Meta:
         managed = False

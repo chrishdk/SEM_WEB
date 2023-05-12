@@ -1,0 +1,60 @@
+{% extends 'app/base.html' %} 
+<!-- importaciones de carpeta static -->
+{% load static %}
+
+<!-- integracion de js personalizado -->
+{% block js %}
+{% endblock %}
+
+<!-- integracion de css personalizado -->
+{% block css %}
+{% endblock %}
+
+
+
+<!-- Contenido de la pag -->
+{% block contenido %}
+
+<h2>Inscripcion</h2>
+<!-- <div class="col-md-2">
+    <form action="" method="POST">
+        {% csrf_token %}
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="floatingInput" placeholder="">
+        <label for="floatingInput">Usuario</label>
+      </div>
+      <div class="form-floating">
+        <input type="password" class="form-control" id="floatingPassword" placeholder="">
+        <label for="floatingPassword">Contraseña</label>
+      </div>
+      <br>
+      <div class="form-floating">
+      <input class="btn btn-primary" type="submit" value="Submit">
+      </div>
+    </form>
+</div> -->
+
+<table class="table">
+<thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Direccion</th>
+    </tr>
+  </thead>
+</table>
+{% for p in usuarios %}
+        <table class="table">
+            <tbody>
+              <tr>
+                <td>{{ p.0 }}</td>
+                <td>{{ p.1 }}</td>
+                <td>{{ p.3 }}</td>
+              </tr>
+            </tbody>
+        </table>
+        {% endfor %}
+    </table>
+
+
+{% endblock %}
