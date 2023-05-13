@@ -24,6 +24,13 @@ class Registrar(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+        # try: 
+        #     mi codigo
+        # except Exception as e:
+        #     error_message = f'error en tal lado mensaje : {e}'
+        #     response 
+        #     mi respuesta si falla
+        
 class Tabla(APIView):
     permission_classes = [AllowAny]
     def post (self, request, format=None):

@@ -16,8 +16,20 @@
 {% block contenido %}
 
 
-<h1>Inicio</h1>
-<p>Aquí puedes agregar el contenido principal de tu página.</p>
+<table class="table table-striped table-hover table-responsive-sm">
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Direccion</th>
+    </tr>
+    {% for p in usuarios %}
+    <tr>
+        <td>{{ p.0 | title }}</td>
+        <td>{{ p.1 | title }}</td>
+        <td>{{ p.3 | title }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
 
 

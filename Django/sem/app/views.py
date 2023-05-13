@@ -14,12 +14,12 @@ def reporte(request):
     return render(request,'app/reportes.html')
 
 def usuarios(request):
-    print (listado_usuarios())
+    # print (listado_usuarios())
 
     data = {
         'usuarios':listado_usuarios()
     }
-    agregar_usuario(4,'kenny del futuro', 60, 'su casa')
+    # agregar_usuario(4,'kenny del futuro', 60, 'su casa')
     return render(request,'app/usuarios.html', data)
 
 def listado_usuarios():
