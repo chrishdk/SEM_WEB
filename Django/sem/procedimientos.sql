@@ -28,3 +28,10 @@ end;
 /
 
 
+create or replace procedure sp_listar_empleados(usuarios out SYS_REFCURSOR)
+is
+
+begin
+    open usuarios for select * from empleado;
+end;
+/

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'app',
     'apirest',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -108,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'es'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
@@ -140,3 +141,7 @@ REST_FRAMEWORK = {
     ],
 }
 APPEND_SLASH = False
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8100',
+]

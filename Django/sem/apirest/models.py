@@ -170,7 +170,7 @@ class Region(models.Model):
 
 class Reporte(models.Model):
     id_reporte = models.FloatField(primary_key=True)
-    imagen = models.BinaryField()
+    imagen = models.BinaryField(blank=True, null=True)
     titulo = models.CharField(max_length=25)
     ingreso = models.DateField()
     descripcion = models.CharField(max_length=250)
