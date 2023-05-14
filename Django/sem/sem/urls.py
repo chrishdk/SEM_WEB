@@ -25,7 +25,7 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('app.urls')),
-    path('api/1.0/',include(('apirest.urls','api'))),
+
 ]
 
 # if settings.DEBUG:
