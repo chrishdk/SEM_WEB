@@ -40,9 +40,7 @@ def formr(request):
 
 
 
-@login_required(login_url='/accounts/login')
-def formempleado(request):
-    return render(request,'app/form_emp.html')
+
 
 
 
@@ -72,9 +70,7 @@ def reporte(request):
 @login_required(login_url='/accounts/login')
 def usuarios(request):
     data = {
-        
     }
-
     return render(request,'app/usuarios.html', data)
 
 
@@ -82,12 +78,23 @@ def usuarios(request):
 
 @login_required(login_url='/accounts/login')
 def empleado(request):
+    datos_empleados = sp_listar_empleado()
+    arreglo = []
+    for i in datos_empleados:
+            data ={
+                'data': i,
+                'imagen': str(base64.b64encode(i[9].read()),'utf-8')
+        }
+            arreglo.append(data)
     data = {
-        'empleados':sp_listar_empleado()
+        'empleados':arreglo
     }
-
     return render(request,'app/emp.html', data)
 
+
+@login_required(login_url='/accounts/login')
+def formempleado(request):
+    return render(request,'app/form_emp.html')
 
 
 

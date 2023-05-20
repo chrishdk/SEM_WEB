@@ -151,6 +151,7 @@ class Empleado(models.Model):
     email = models.CharField(max_length=50)
     empresa_id_empresa = models.ForeignKey('Empresa', models.DO_NOTHING, db_column='empresa_id_empresa')
     cargo_emp_id_cargo_emp = models.ForeignKey(CargoEmp, models.DO_NOTHING, db_column='cargo_emp_id_cargo_emp')
+    imagen = models.BinaryField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -224,6 +225,7 @@ class Reporte(models.Model):
     piso_id_piso = models.ForeignKey(Piso, models.DO_NOTHING, db_column='piso_id_piso')
     sector_id_sector = models.ForeignKey('Sector', models.DO_NOTHING, db_column='sector_id_sector')
     estado_r_id_estado = models.ForeignKey(EstadoR, models.DO_NOTHING, db_column='estado_r_id_estado')
+    imagen = models.BinaryField(blank=True, null=True)
 
     class Meta:
         managed = False

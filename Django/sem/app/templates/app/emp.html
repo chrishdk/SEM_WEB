@@ -22,6 +22,35 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Tabla de Reportes</h6>
+                        </div>
+
+                    {% for p in empleados %}
+                    
+
+                    <div class="card mb-3" style="max-width: 500px;">
+                        <div class="row no-gutters">
+                          <div class="col-md-4">
+                            <img src="data:imagen/png;base64, {{p.imagen}}" alt="..." class="img-fluid">
+                          </div>
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <h5 class="card-title"></h5>
+                              <p class="card-text">{{ p.data.2 | title }} {{ p.data.4 | title }}</p>
+                
+                              <p class="card-text"><small class="text-muted">{{ p.data.6 | title }}</small></p>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    
+                
+                      {% endfor %}
+                    </div>
+
+                    <!-- <div class="card shadow mb-4">
+                        <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Tabla de Empleados</h6>
                         </div>
                         <div class="card-body">
@@ -53,5 +82,5 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     {% endblock %}
