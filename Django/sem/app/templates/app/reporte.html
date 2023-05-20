@@ -30,36 +30,60 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>imagen</th>
                                             <th>Titutlo</th>
-                                            <th>Ingreso</th>
                                             <th>Descripcion</th>
-                                            <th>Empleado</th>
+                                            <th>Fecha ingreso</th>
+                                            <th>Ingresado</th>
+                                            <th>Prioridad</th>
+                                            <th>Piso</th>
+                                            <th>sector</th>
+                                            <th>estado</th>
+                                            <th>Imagen</th>
+                                            <th>Accion</th>
                                         </tr>
                                     </thead>
-                                    <!-- <tfoot>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nombres</th>
-                                            <th>Apellidos</th>
-                                            <th>Email</th>
-                                            <th>RUT</th>
 
-                                        </tr>
-                                    </tfoot> -->
                                     <tbody>
                                         {% for p in reporte %}
                                         <tr>
-                                            <td>{{ p.0 | title }}</td>
-                                            <td>{{ p.1  | title }} </td>
-                                            <td>{{ p.2 | title }}</td>
-                                            <td>{{ p.3 | title }}</td>
-                                            <td>{{ p.4 | title }}</td>
-                                            <td>{{ p.5 | title }}</td>
-
-
+                                            <td>{{ p.data.0 | title }}</td>
+                                            <td>{{ p.data.1 | title }}</td>
+                                            <td>{{ p.data.2 | title }}</td>
+                                            <td>{{ p.data.3 | title }}</td>
+                                            <td>{{ p.data.4 | title }}</td>
+                                            <td>{{ p.data.5 | title }}</td>
+                                            <td>{{ p.data.6 | title }}</td>
+                                            <td>{{ p.data.7 | title }}</td>
+                                            <td>{{ p.data.8 | title }}</td>
+                                            <td>
+                                                {% if p.imagen %}<!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                                  Ver
+                                                </button>
+                                                
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                  <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Reporte n°{{ p.data.0 | title }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <img src="data:imagen/png;base64, {{p.imagen}}" alt="" class="img-fluid" >
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                         {% endfor %}
+
+                                        <!-- Vertically centered modal -->
+
                                     </tbody>
                                 </table>
                             </div>

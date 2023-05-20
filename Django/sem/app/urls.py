@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import login,reporte,inicio,empleado,usuarios, formempleado,formr
+from .views import reporte,inicio,empleado,usuarios, formempleado,formr
 
 urlpatterns = [
-    path('', login, name="login"),
+    path('', inicio, name="inicio"),
     path('reporte/', reporte, name="reporte"),
-    path('inicio/', inicio, name="inicio"),
+    # path('inicio/', inicio, name="inicio"),
     path('usuarios/', usuarios, name="usuarios"),
     path('empleado/', empleado, name="empleado"),
     path('formempelado/', formempleado, name="formempelado"),

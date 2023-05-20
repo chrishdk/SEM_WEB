@@ -2,17 +2,21 @@ from django.shortcuts import render
 from django.db import connection
 import cx_Oracle
 from .forms import ReporteForm
+from django.contrib.auth.decorators import login_required
+import base64
 
 
 
 # Create your views here.
-
-def login(request):
-    return render(request,'app/login.html')
-
+@login_required(login_url='/accounts/login')
 def inicio(request):
-    return render(request,'app/inicio.html')
+    return render(request,'app/index.html')
 
+
+
+# def inicio(request):
+#     return render(request,'app/inicio.html')
+@login_required(login_url='/accounts/login')
 def formr(request):
     # data = {
     #     'empleado_id_empleado':listado_empleado(),
@@ -36,43 +40,55 @@ def formr(request):
 
 
 
-
+@login_required(login_url='/accounts/login')
 def formempleado(request):
     return render(request,'app/form_emp.html')
 
 
-def reporte(request):
-        # print (listado_usuarios())
 
+@login_required(login_url='/accounts/login')
+def reporte(request):
+
+    datos_reportes = listar_reporte()
+
+    arreglo = []
+
+    for i in datos_reportes:
+            data ={
+                'data': i,
+                'imagen': str(base64.b64encode(i[9].read()),'utf-8')
+        }
+            arreglo.append(data)
+
+    
     data = {
-        'reporte':listado_reporte()
+        'reporte':arreglo
     }
 
     return render(request,'app/reporte.html', data)
 
 
 
-
+@login_required(login_url='/accounts/login')
 def usuarios(request):
-    # print (listado_usuarios())
     data = {
-        'usuarios':listado_usuarios()
+        
     }
-    # agregar_usuario(4,'kenny del futuro', 60, 'su casa')
+
     return render(request,'app/usuarios.html', data)
 
 
 
 
-
+@login_required(login_url='/accounts/login')
 def empleado(request):
-    # print (listado_usuarios())
-
     data = {
-        'usuarios':listado_empleado()
+        'empleados':sp_listar_empleado()
     }
-    # agregar_usuario(4,'kenny del futuro', 60, 'su casa')
+
     return render(request,'app/emp.html', data)
+
+
 
 
 
@@ -96,13 +112,13 @@ def listado_usuarios():
     
     return lista
 
-
-def listado_empleado():
+# listo
+def sp_listar_empleado():
     django_cursor =connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
-    cursor.callproc("SP_LISTAR_EMPLEADOS", [out_cur])
+    cursor.callproc("sp_listar_empleado", [out_cur])
     lista =[]
     for fila in out_cur:
         lista.append(fila)
@@ -111,13 +127,13 @@ def listado_empleado():
 
 
 
-
-def listado_reporte():
+# listo
+def listar_reporte():
     django_cursor =connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
-    cursor.callproc("SP_LISTAR_REPORTE", [out_cur])
+    cursor.callproc("sp_listar_reporte", [out_cur])
     lista =[]
     for fila in out_cur:
         lista.append(fila)

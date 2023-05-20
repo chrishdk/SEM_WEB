@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-i&c!5c63r&5fd_4v!9$$(0vlf)239@p!(-)qs2^2u97j544ex8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.10']
+ALLOWED_HOSTS = []
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+# SESSION_COOKIE_AGE = 10
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 # Application definition
@@ -78,8 +83,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'projectsem_high',
-        'USER': 'PRUEBA',
-        'PASSWORD': 'Pru123456789'
+        'USER': 'kenny',
+        'PASSWORD': 'Ke123456789**'
     }
 }
 
@@ -130,12 +135,14 @@ MEDIA_ROOT =os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        # Otros esquemas de autenticación si los estás utilizando
-    ],
-}
-APPEND_SLASH = False
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework.authentication.TokenAuthentication',
+#         # Otros esquemas de autenticación si los estás utilizando
+#     ],
+# }
+# APPEND_SLASH = False
+
+# AUTH_USER_MODEL = 'app.Usuario'
 
