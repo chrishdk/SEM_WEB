@@ -1,5 +1,5 @@
 -- Generado por Oracle SQL Developer Data Modeler 22.2.0.165.1149
---   en:        2023-05-22 12:52:27 CLT
+--   en:        2023-05-22 13:00:36 CLT
 --   sitio:      Oracle Database 11g
 --   tipo:      Oracle Database 11g
 
@@ -131,8 +131,8 @@ CREATE TABLE reporte (
     sector_id_sector       NUMBER NOT NULL,
     estado_r_id_estado     NUMBER NOT NULL,
     sucursal_id_sucursal   NUMBER NOT NULL,
-    asignado               VARCHAR2(50),
-    imagen                 BLOB
+    imagen                 BLOB,
+    asignado               VARCHAR2(50)
 );
 
 ALTER TABLE reporte ADD CONSTRAINT reporte_pk PRIMARY KEY ( id_repote );
@@ -282,6 +282,7 @@ ALTER TABLE usuario
 -- 
 -- ERRORS                                   0
 -- WARNINGS                                 0
+
 
 INSERT INTO REGION (	ID_REGION	,	REGION	)	VALUES(	1	,		'XV Arica y Parinacota'	);
 INSERT INTO REGION (	ID_REGION	,	REGION	)	VALUES(	2	,		'I Tarapacá'	);
