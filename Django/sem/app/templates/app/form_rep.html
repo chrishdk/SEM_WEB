@@ -15,45 +15,95 @@
 {% endblock %}
 
 {% block contenido %}
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Formulario de Reportes</h1>
-                    
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Agregar reporte</h6>
-                        </div>
-                        <div class="card-body">
-                            <!-- <form action="" method="post">
-                                {% csrf_token %}
-
-                            <label for="">id</label>
-                            <input type="text" name="id_reporte" id="id_reporte">
-                            <label for="">titulo</label>
-                            <input type="text" name="titulo" id="titulo">
-                            <label for="">ingreso</label>
-                            <input type="text" name="descripcion" id="descripcion">
-                            <label for="">empleado</label>
-                            <select name="empleado_id_empleado" id="empleado_id_empleado">
-                                <option value="">seleccionar</option>
-                                {% for c in empleado_id_empleado%}
-                                    <option value="{{ c.0 }}"> {{ c.1 }}</option>
-                                {% endfor %}
-                            </select>
-                            <input type="text" name="empleado_id_empleado" id="empleado_id_empleado"> 
-                            <br>
-                            <input type="submit" value="guardar">
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Empleados</h1>
 
 
-                        </form> -->
-                        {{mensaje}}
-                        </div>
-                    </div>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Agregar empleado</h6>
+    </div>
+    <div class="card-body">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Id</label>
+            <input type="" class="form-control" name="id_repote">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Titulo</label>
+            <input type="" class="form-control"  name="titulo">
+        </div>
+
+          <div class="mb-3">
+            <label class="col-form-label">Descripcion</label>
+            <input type="" class="form-control" name="descripcion">
+
+
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Fecha Ingreso</label>
+            <input type="" class="form-control" name="fecha_ingreso">
+
+
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Ingresado</label>
+            <input type="" class="form-control" name="usuario_usuario">
+
+
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Prioridad</label>
+            <input type="" class="form-control"  name="prioridad_id_prioridad">
+          </div>
+
+
+          <div class="mb-3">
+            <label class="form-label">Piso</label>
+            <input type="" class="form-control" name="piso_id_piso">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Sector</label>
+            <input type="" class="form-control" name="sector_id_sector">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Estado</label>
+            <input type="" class="form-control" name="estado_r_id_estado">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Sucursal</label>
+            <input type="" class="form-control" name="sucursal_id_sucursal">
+          </div>
+
+          <div class="mb-3">
+            <label for="formFile" class="form-label"></label>
+            <input class="form-control" type="file" name="imagen">
+            
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Asignado</label>
+            <input type="" class="form-control" name="asignado">
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
 
 
 
 
+    </form>
 
-                    {% endblock %}
-                
+
+</div>
+
+</div>
+
+
+{% endblock %}

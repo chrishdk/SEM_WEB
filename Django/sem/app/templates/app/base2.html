@@ -26,13 +26,14 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'app/css/sb-admin-2.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'app/css/logo.css' %}" rel="stylesheet" />
+
 
     <!-- Custom styles for this page -->
     <link
       href="{% static 'app/css/dataTables.bootstrap4.min.css' %}"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
 
     {% block css %} {% endblock %}
   </head>
@@ -170,6 +171,20 @@
           >
         </li>
         <li class="nav-item active">
+          <a class="nav-link" href="{% url 'solicitud'%}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Solicitudes</span></a
+          >
+        </li>
+
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'formsoli'%}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Agregar Solicitud</span></a
+          >
+        </li>
+
+        <li class="nav-item active">
           <a class="nav-link" href="{% url 'usuarios' %}">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -282,10 +297,13 @@
 
                   aria-haspopup="true"
                   aria-expanded="false"
-                >                
-                  <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                    >@{{ user.username }}</span
+                >
+                             
+                  <span class="mr-3 d-none d-lg-inline "
+                    >{{ user.username }}</span
                   >
+                  <img class="person-user" 
+                  src="{% static 'app/img/person.png' %}">
 
                 </a>
             </li>

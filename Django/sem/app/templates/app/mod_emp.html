@@ -25,41 +25,43 @@
         <h6 class="m-0 font-weight-bold text-primary">Agregar empleado</h6>
     </div>
     <div class="card-body">
+
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-
+        
+        {% for p in empleado %}
         <div class="mb-3">
 
             <label class="form-label">Rut</label>
-            <input type="" class="form-control" name="rut">
+            <input type="" class="form-control" name="rut" value="{{p.data.0}}">
             <label class="form-label">Verificador</label>
-            <input type="" class="form-control"  name="dv">
+            <input type="" class="form-control"  name="dv" value="{{p.data.1}}">
 
         </div>
 
           <div class="mb-3">
             <label class="col-form-label">Primer nombre</label>
-            <input type="" class="form-control" name="p_nombre">
+            <input type="" class="form-control" name="p_nombre" value="{{p.data.2}}">
             <label class="col-form-label">Segundo nombre</label>
-            <input type="" class="form-control" name="s_nombre">
+            <input type="" class="form-control" name="s_nombre" value="{{p.data.3}}">
             <label class="col-form-label">Apellido Paterno</label>
-            <input type="" class="form-control" name="p_apellido">
+            <input type="" class="form-control" name="p_apellido" value="{{p.data.4}}">
             <label class="col-form-label">Aplledo Materno</label>
-            <input type="" class="form-control"  name="s_apellido">
+            <input type="" class="form-control"  name="s_apellido" value="{{p.data.5}}">
           </div>
 
 
           <div class="mb-3">
             <label class="form-label">Email</label>
-            <input type="" class="form-control" name="email">
+            <input type="" class="form-control" name="email" value="{{p.data.6}}">
           </div>
 
-
+          
           <div class="mb-3">
             <label class="col-form-label">Cargo</label>
             <select name="cargo" id="">
 
-                <option value="">Seleccionar</option>
+                <option value="{{p.data.7}}">Seleccionar</option>
                 {% for c in cargo %}
             <!-- <input type="" class="form-control" name="cargo"> -->
                 <option value="{{c.0}}">{{c.1}}</option>
@@ -71,26 +73,27 @@
           <div class="mb-3">
             <label class="form-label">Sucursal</label>
             <select name="sucursal" id="">
-                <option value="">Seleccionar</option>
+                <option value="{{p.data.8}}">Seleccionar</option>
                 {% for c in sucursal %}
                 <option value="{{c.0}}">{{c.1}}</option>
             <!-- <input type="" class="form-control" name="sucursal"> -->
                 {% endfor %}
           </div>
 
+          
+          
+
           <br>
 
           <div class="mb-3">
             <label for="formFile" class="form-label"></label>
-            <input class="form-control" type="file" name="imagen">
+            <input class="form-control" type="file" name="imagen" value="{{p.imagen}}">
             
           </div>
+          
 
           <button type="submit" class="btn btn-primary">Submit</button>
-
-
-
-
+          {% endfor %}
     </form>
 
 

@@ -16,50 +16,51 @@
 
 {% block contenido %}
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Usuarios</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Solicitud</h1>
                     
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Tabla de Usuarios</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Tabla de Solicitudes</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>User</th>
-                                            <th>Contraseña</th>
-                                            <th>Rut</th>
+                                            <th>ID</th>
+                                            <th>Solicitud</th>
+                                            <th>Fecha ingreso</th>
                                             <th>Estado</th>
-                                            <th>Accion</th>
-
+                                            <th>Sucursal</th>
+                                            <th>Solicitado</th>
 
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        {% for p in usuarios %}
+                                        {% for p in solicitud %}
                                         <tr>
                                             <td>{{ p.0 | title }}</td>
                                             <td>{{ p.1 | title }}</td>
                                             <td>{{ p.2 | title }}</td>
                                             <td>{{ p.3 | title }}</td>
-                                            <td>
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                                    habilitar
-                                                  </button>
+                                            <td>{{ p.4 | title }}</td>
+                                            <td>{{ p.5 | title }}</td>
                                             
-                                            
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                                    Deshabilitar
-                                                  </button>
-                                            </td>
+                                                
+                                                <!-- Button trigger modal -->
 
+                                                
+                                                <!-- Modal -->
+
+                                            
+                                            
                                         </tr>
                                         {% endfor %}
 
+                                        <!-- Vertically centered modal -->
 
                                     </tbody>
                                 </table>

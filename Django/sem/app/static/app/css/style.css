@@ -1,0 +1,26 @@
+.body-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: rgb(222, 222, 222);
+    background-size: cover;
+  }
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
+  }
+
+
+.person-user{
+    height: 32px;
+    width: 32px;
+  }
+
+  .logo{
+    margin-left: 25px;
+    width: 100px;
+    height: 45px;
+}

@@ -1,0 +1,74 @@
+{% extends 'app/base2.html' %}
+
+
+
+
+
+    {% load static %}
+
+    <!-- integracion de js personalizado -->
+{% block js %}
+{% endblock %}
+
+    <!-- integracion de css personalizado -->
+{% block css %}
+{% endblock %}
+
+{% block contenido %}
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Empleados</h1>
+
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Agregar empleado</h6>
+    </div>
+    <div class="card-body">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Id</label>
+            <input type="" class="form-control" name="id_insumo">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Insumo</label>
+            <input type="" class="form-control"  name="insumo">
+        </div>
+
+          <div class="mb-3">
+            <label class="col-form-label">Stock</label>
+            <input type="" class="form-control" name="stock">
+
+
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Color</label>
+            <input type="" class="form-control" name="color">
+
+
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Sucursal</label>
+            <input type="" class="form-control" name="sucursal_id_sucursal">
+
+
+</div>
+
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+
+
+
+
+    </form>
+
+
+</div>
+
+</div>
+
+
+{% endblock %}

@@ -1,61 +1,65 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Login</title>
-    <!-- Importar Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    />
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión</title>
+  <!-- Agrega los enlaces CSS de Bootstrap -->
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+
+    
     <!-- Estilo personalizado -->
-    <style type="text/css">
-      body {
-        background-color: #f8f9fa;
-      }
-      .login-form {
-        margin-top: 50px;
-      }
-    </style>
+
   </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-12 col-md-6 offset-md-3">
-          <!-- Formulario de inicio de sesión -->
-          <div class="card">
-            <div class="card-body">
-              <h2 class="text-center">Inicio de sesión</h2>
-              <hr />
-              <form action="" method="POST">
+  <body class="body-login" >
 
-				{% csrf_token %}
-				{{ form }}
+    
+    <div class="login-card card">
+      <div class="card-body">
+        <h2 class="card-title text-center mb-4 daniel">Iniciar sesión</h2>
 
-        <input type="submit" value="ingresar">
+                <form action="" method="POST">
+                  {% csrf_token %}
+                  <!-- {{ form }} -->
 
-			  </form>
+                  <div class="form-group">
+                      <label for="id_username">Nombre de Usuario</label>
+                      <input
+                        type="text"
+                        autocomplete="username"
+                        name="username"
+                        class="form-control"
+                        required
+                        id="id_username"
+                        aria-describedby="emailHelp"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="id_username">Contraseña</label>
+                      <input
+                        type="password"
+                        autocomplete="current-password"
+                        name="password"
+                        required
+                        class="form-control"
+                        id="id_password"
+                      />
+                    </div>
+
+                    <button type="submit" value="ingresar" class="btn btn-dark">
+                      ingresar
+                    </button>
+
+                </form>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Importar Bootstrap JS -->
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-      crossorigin="anonymous"
-    ></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   </body>
-</html>
+  </html>
