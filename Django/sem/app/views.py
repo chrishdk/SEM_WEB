@@ -567,3 +567,72 @@ def SP_MODIFICAR_USUARIO(usuario,contrasena,empleado_rut,estado_u_id_estado_u):
     empleado_rut,
     estado_u_id_estado_u])
     return salida.getvalue()
+
+# listo
+def sp_listar_reporte_f(id_reporte):
+    django_cursor =connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_LISTAR_reporte_F", [out_cur,id_reporte])
+    lista =[]
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
+
+
+@login_required(login_url='/accounts/login')
+def modificarasignacion(request,idreporte):
+
+    datos_reporte = sp_listar_reporte_f(id_reporte)
+   
+    data = {
+            'usuario':datos_reporte
+
+    }
+
+    if request.method == 'POST':
+        id_reporte = request.POST.get('id_reporte') 
+        titulo = request.POST.get('titulo')
+        descripcion = request.POST.get('descripcion') 
+        fecha_ingreso = request.POST.get('fecha_ingreso')
+        usuario_usuario = request.POST.get('usuario_usuario')
+
+        salida = SP_MODIFICAR_reporte(id_reporte, 
+        titulo, 
+        descripcion, 
+        fecha_ingreso, 
+        usuario_usuario)
+
+
+
+    return render(request,'app/mod_asig_reporte.html')
+
+def SP_MODIFICAR_reporte(id_repote,
+    titulo,
+    descripcion,
+    fecha_ingreso,
+    usuario_usuario,
+    prioridad_id_prioridad,
+    piso_id_piso,
+    sector_id_sector,
+    estado_r_id_estado,
+    sucursal_id_sucursal,
+    imagen,
+    asignado):
+    django_cursor =connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_MODIFICAR_reporte", [id_repote,
+    titulo,
+    descripcion,
+    fecha_ingreso,
+    usuario_usuario,
+    prioridad_id_prioridad,
+    piso_id_piso,
+    sector_id_sector,
+    estado_r_id_estado,
+    sucursal_id_sucursal,
+    imagen,
+    asignado])
+    return salida.getvalue()

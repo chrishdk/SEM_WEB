@@ -1,1 +1,1 @@
-call python manage.py runserver
+call python manage.py runserver 127.0.0.1:8080
