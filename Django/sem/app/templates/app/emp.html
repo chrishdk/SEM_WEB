@@ -12,20 +12,126 @@
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
+
   <div class="card-header py-3">
+     <div class="row">
+      <div class="col-8">
     <h6 class="m-0 font-weight-bold text-primary">Tabla de Empleados</h6>
   </div>
+  <div class="col-4">
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#staticBackdrop">
+      Ingresar Empleado
+    </button>
+  </div> 
+</div>
+    
+  </div>
+
+  <!-- Button trigger modal -->
+
+
+
+<!-- Modal -->
+
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+
+            <label class="form-label">Rut</label>
+            <input type="" class="form-control" name="rut">
+            <label class="form-label">Verificador</label>
+            <input type="" class="form-control"  name="dv">
+
+        </div>
+
+          <div class="mb-3">
+            <label class="col-form-label">Primer nombre</label>
+            <input type="" class="form-control" name="p_nombre">
+            <label class="col-form-label">Segundo nombre</label>
+            <input type="" class="form-control" name="s_nombre">
+            <label class="col-form-label">Apellido Paterno</label>
+            <input type="" class="form-control" name="p_apellido">
+            <label class="col-form-label">Aplledo Materno</label>
+            <input type="" class="form-control"  name="s_apellido">
+          </div>
+
+
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="" class="form-control" name="email">
+          </div>
+
+
+          <div class="mb-3">
+            <label class="col-form-label">Cargo</label>
+            <select name="cargo" id="">
+
+                <option value="">Seleccionar</option>
+                {% for c in cargo %}
+            <!-- <input type="" class="form-control" name="cargo"> -->
+                <option value="{{c.0}}">{{c.1}}</option>
+                {% endfor %}
+            </select>
+          </div>
+
+          
+          <div class="mb-3">
+            <label class="form-label">Sucursal</label>
+            <select name="sucursal" id="">
+                <option value="">Seleccionar</option>
+                {% for c in sucursal %}
+                <option value="{{c.0}}">{{c.1}}</option>
+            <!-- <input type="" class="form-control" name="sucursal"> -->
+                {% endfor %}
+          </div>
+
+          <br>
+
+          <div class="mb-3">
+            <label for="formFile" class="form-label"></label>
+            <input class="form-control" type="file" name="imagen">
+            
+          </div>
+
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- fin del molda -->
 
   {% for p in empleado %}
   <br />
   <div class="card mb-3" style="max-width: 500px">
     <div class="row no-gutters">
       <div class="col-md-4">
-        <img
+        <!-- <img
           src="data:imagen/png;base64, {{p.imagen}}"
           alt="..."
           class="img-fluid"
-        />
+        /> -->
       </div>
       <div class="col-md-8">
         <div class="card-body">

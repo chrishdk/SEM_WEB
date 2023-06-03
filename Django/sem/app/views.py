@@ -121,7 +121,8 @@ def empleado(request):
     for i in datos_empleado:
         imagen = i[9]
         if imagen is not None:
-            imagen_base64 = str(base64.b64encode(imagen.read()), 'utf-8')
+            # imagen_base64 = str(base64.b64encode(imagen.read()), 'utf-8')
+            imagen_base64 = None
         else:
             imagen_base64 = None
 
@@ -132,8 +133,30 @@ def empleado(request):
         arreglo.append(data)
 
     data = {
-        'empleado': arreglo
+        'empleado': arreglo,
+        'cargo':listado_cargo(),
+        'sucursal':listado_sucursal()
     }
+
+
+    #     data= {
+    #     'cargo':listado_cargo(),
+    #     'sucursal':listado_sucursal()
+         
+    # }
+    if request.method == 'POST':
+        rut = request.POST.get('rut')
+        dv = request.POST.get('dv')
+        p_nombre = request.POST.get('p_nombre')
+        s_nombre = request.POST.get('s_nombre')
+        p_apellido = request.POST.get('p_apellido')
+        s_apellido = request.POST.get('s_apellido')
+        email = request.POST.get('email')
+        cargo = request.POST.get('cargo')
+        sucursal = request.POST.get('sucursal')
+        imagen = request.FILES['imagen'].read()
+
+        salida = agregar_empleado(rut,dv,p_nombre,s_nombre,p_apellido,s_apellido,email,cargo,sucursal,imagen)
 
     return render(request,'app/emp.html', data)
 
