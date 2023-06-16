@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import connection
 import cx_Oracle
-from .forms import EmpresaForm
+from .forms import EmpresaForm,ReporteForm
 from django.contrib.auth.decorators import login_required
 from PIL import Image
 from io import BytesIO
@@ -735,3 +735,158 @@ def SP_MODIFICAR_reporte(id_repote,
                                              imagen,
                                              asignado])
     return salida.getvalue()
+
+
+
+@login_required(login_url='/accounts/login')
+def prueba(request):
+    datos_reportes = listar_reporte()
+    arreglo = []
+
+    for i in datos_reportes:
+        imagen = i[10]
+        if imagen is not None:
+            imagen_base64 = str(base64.b64encode(imagen.read()), 'utf-8')
+        else:
+            imagen_base64 = None
+
+        data = {
+            'data': i,
+            'imagen': imagen_base64
+        }
+        arreglo.append(data)
+
+    data = {
+        'reporte': arreglo,
+        'form': ReporteForm
+    }
+    
+    if request.method == 'POST':
+        id_reporte = request.POST.get('id_reporte')
+        titulo = request.POST.get('titulo')
+        descripcion = request.POST.get('descripcion')
+        fecha_ingreso = request.POST.get('fecha_ingreso')
+        usuario_usuario = request.POST.get('usuario_usuario')
+        prioridad_id_prioridad = request.POST.get('prioridad_id_prioridad')
+        piso_id_piso = request.POST.get('piso_id_piso')
+        sector_id_sector = request.POST.get('sector_id_sector')
+        estado_r_id_estado = request.POST.get('estado_r_id_estado')
+        sucursal_id_sucursal = request.POST.get('sucursal_id_sucursal')
+        imagen = request.FILES['imagen']
+        asignado = request.POST.get('asignado')
+
+        image = Image.open(imagen)
+        max_size = (500, 500)
+        image.thumbnail(max_size)
+
+        image_buffer = BytesIO()
+        image.save(image_buffer, format='JPEG')
+        image_data = image_buffer.getvalue()
+
+        salida = SP_AGREGAR_REPORTE(
+
+            titulo,
+            descripcion,
+            fecha_ingreso,
+            usuario_usuario,
+            prioridad_id_prioridad,
+            piso_id_piso,
+            sector_id_sector,
+            estado_r_id_estado,
+            sucursal_id_sucursal,
+            image_data,
+            asignado)
+
+    return render(request, 'app/prueba.html', data)
+
+
+
+
+
+
+@login_required(login_url='/accounts/login')
+def prueba_emp(request):
+    datos_empleado = sp_listar_empleado()
+
+    arreglo = []
+
+    for i in datos_empleado:
+        imagen = i[9]
+        if imagen is not None:
+            imagen_base64 = str(base64.b64encode(imagen.read()), 'utf-8')
+        else:
+            imagen_base64 = None
+
+        data = {
+            'data': i,
+            'imagen': imagen_base64
+        }
+        arreglo.append(data)
+
+    data = {
+        'empleado': arreglo,
+        'cargo': listado_cargo(),
+        'sucursal': listado_sucursal()
+    }
+
+
+    if request.method == 'POST':
+        accion = request.POST.get('accion')
+
+        if accion == 'nuevo':
+            rut = request.POST.get('rut')
+            dv = request.POST.get('dv')
+            p_nombre = request.POST.get('p_nombre')
+            s_nombre = request.POST.get('s_nombre')
+            p_apellido = request.POST.get('p_apellido')
+            s_apellido = request.POST.get('s_apellido')
+            email = request.POST.get('email')
+            cargo = request.POST.get('cargo')
+            sucursal = request.POST.get('sucursal')
+            imagen = request.FILES['imagen']
+
+            image = Image.open(imagen)
+            max_size = (500, 500)
+            image.thumbnail(max_size)
+
+            image_buffer = BytesIO()
+            image.save(image_buffer, format='JPEG')
+            image_data = image_buffer.getvalue()
+
+            salida = agregar_empleado(
+                rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
+            return redirect('prueba_emp')
+            
+        elif accion == 'modificar':
+            rut = request.POST.get('rut')
+            dv = request.POST.get('dv')
+            p_nombre = request.POST.get('p_nombre')
+            s_nombre = request.POST.get('s_nombre')
+            p_apellido = request.POST.get('p_apellido')
+            s_apellido = request.POST.get('s_apellido')
+            email = request.POST.get('email')
+            cargo = request.POST.get('cargo')
+            sucursal = request.POST.get('sucursal')
+            imagen = request.FILES['imagen']
+
+             # Redimensionar imagen
+            image = Image.open(imagen)
+            max_size = (500, 500)
+            image.thumbnail(max_size)
+
+            image_buffer = BytesIO()
+            image.save(image_buffer, format='JPEG')
+            image_data = image_buffer.getvalue()
+
+
+            salida = SP_MODIFICAR_EMPLEADO(
+                rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
+            return redirect('prueba_emp')
+
+
+
+    return render(request, 'app/prueba_emp.html', data)
+
+
+
+
