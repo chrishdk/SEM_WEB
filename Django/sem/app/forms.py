@@ -1,8 +1,10 @@
 from django import forms
-from .models import Reporte
+from .models import Empresa,Empleado
 
-class ReporteForm(forms.ModelForm):
+class EmpresaForm(forms.ModelForm):
     class Meta:
-        model = Reporte
-        # fields = ['nombre', 'descripcion', 'imagen']
+        model = Empresa
+        #fields = ['empresa', 'direccion','n_direccion']
         fields = '__all__'
+
+

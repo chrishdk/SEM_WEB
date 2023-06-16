@@ -1,103 +1,212 @@
-{% extends 'app/base2.html' %}
+{% extends 'app/base2.html' %} {% load static %}
+
+<!-- integracion de js personalizado -->
+{% block js %} {% endblock %}
+
+<!-- integracion de css personalizado -->
+{% block css %} {% endblock %} {% block contenido %}
+<!-- Page Heading -->
+<div class="container-fluid">
 
 
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+<h1 class="h3 mb-2 text-gray-800">Reportes</h1>
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#staticBackdrop">
+  Ingresar Reporte
+</button>
+</div>
 
 
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Tabla de Reportes</h6>
+  </div>
 
-    {% load static %}
 
-    <!-- integracion de js personalizado -->
-{% block js %}
-{% endblock %}
+  <div class="card-body">
+    <div class="table-responsive">
 
-    <!-- integracion de css personalizado -->
-{% block css %}
-{% endblock %}
 
-{% block contenido %}
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Reportes</h1>
-                    
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Titutlo</th>
+            <th>Descripcion</th>
+            <th>Fecha ingreso</th>
+            <th>Ingresado</th>
+            <th>Prioridad</th>
+            <th>Piso</th>
+            <th>sector</th>
+            <th>estado</th>
+            <th>Asignado</th>
+            <th>Imagen</th>
+            <th>Accion</th>
+          </tr>
+        </thead>
 
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Tabla de Reportes</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Titutlo</th>
-                                            <th>Descripcion</th>
-                                            <th>Fecha ingreso</th>
-                                            <th>Ingresado</th>
-                                            <th>Prioridad</th>
-                                            <th>Piso</th>
-                                            <th>sector</th>
-                                            <th>estado</th>
-                                            <th>Asignado</th>
-                                            <th>Imagen</th>
-                                            <th>Accion</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        {% for p in reporte %}
-                                        <tr>
-                                            <td>{{ p.data.0 | title }}</td>
-                                            <td>{{ p.data.1 | title }}</td>
-                                            <td>{{ p.data.2 | title }}</td>
-                                            <td>{{ p.data.3 | title }}</td>
-                                            <td>{{ p.data.4 | title }}</td>
-                                            <td>{{ p.data.5 | title }}</td>
-                                            <td>{{ p.data.6 | title }}</td>
-                                            <td>{{ p.data.7 | title }}</td>
-                                            <td>{{ p.data.8 | title }}</td>
-                                            <td>{{ p.data.11 | title }}</td>
-                                            <td>
-                                                {% if p.imagen %}
-                                                <!-- Button trigger modal -->
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                                  Ver
-                                                </button>
-                                                
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                  <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                      <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Reporte n°{{ p.data.0 | title }}</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                          <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                      </div>
-                                                      <div class="modal-body">
-                                                        <img src="data:imagen/png;base64, {{p.imagen}}" alt="" class="img-fluid" >
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                              
-                                                <button type="button" href="" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                                    Asignar
-                                                  </button>
-                                            
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-
-                                        <!-- Vertically centered modal -->
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+        <tbody>
+          {% for p in reporte %}
+          <tr>
+            <td>{{ p.data.0 | title }}</td>
+            <td>{{ p.data.1 | title }}</td>
+            <td>{{ p.data.2 | title }}</td>
+            <td>{{ p.data.3 | title }}</td>
+            <td>{{ p.data.4 | title }}</td>
+            <td>{{ p.data.5 | title }}</td>
+            <td>{{ p.data.6 | title }}</td>
+            <td>{{ p.data.7 | title }}</td>
+            <td>{{ p.data.8 | title }}</td>
+            <td>{{ p.data.11 | title }}</td>
+            <td>
+              {% if p.imagen %}
+              <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                data-target="#miModal{{ forloop.counter }}">
+                Ver</button>
+              <div class="modal fade" id="miModal{{ forloop.counter }}" tabindex="-1" role="dialog"
+                aria-labelledby="miModalLabel{{ forloop.counter }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="miModalLabel{{ forloop.counter }}">{{ p.data.0 }}-{{ p.data.1 }}
+                      </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
                     </div>
+                    <div class="modal-body">
+                      <!-- Contenido del modal -->
+                      <img src="data:image/jpeg;base64,{{ p.imagen }}" alt="Imagen" class="img-fluid">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            </td>
+            <td>
+              <button type="button" href="" class="btn btn-primary" data-toggle="modal" data-target="">
+                Asignar
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
 
-                    {% endblock %}
+          <!-- Vertically centered modal -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- Inicio del modal ingresar reporte -->
+  <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Ingresar empleado</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+
+
+          <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Id</label>
+            <input type="" class="form-control" name="id_reporte">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Titulo</label>
+            <input type="" class="form-control"  name="titulo">
+        </div>
+
+          <div class="mb-3">
+            <label class="col-form-label">Descripcion</label>
+            <input type="" class="form-control" name="descripcion">
+
+
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Fecha Ingreso</label>
+            <input type="" class="form-control" name="fecha_ingreso">
+
+
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Ingresado</label>
+            <input type="" class="form-control" name="usuario_usuario">
+
+
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Prioridad</label>
+            <input type="" class="form-control"  name="prioridad_id_prioridad">
+          </div>
+
+
+          <div class="mb-3">
+            <label class="form-label">Piso</label>
+            <input type="" class="form-control" name="piso_id_piso">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Sector</label>
+            <input type="" class="form-control" name="sector_id_sector">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Estado</label>
+            <input type="" class="form-control" name="estado_r_id_estado">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Sucursal</label>
+            <input type="" class="form-control" name="sucursal_id_sucursal">
+          </div>
+
+          <div class="mb-3">
+            <label for="formFile" class="form-label"></label>
+            <input class="form-control" type="file" name="imagen">
+            
+          </div>
+
+          <!-- <div class="mb-3">
+            <label class="form-label">Asignado</label>
+            <input type="" class="form-control" name="asignado">
+          </div> -->
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+
+
+
+
+    </form>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+{% endblock %}

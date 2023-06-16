@@ -87,7 +87,7 @@ class AuthUserUserPermissions(models.Model):
 
 
 class CargoEmp(models.Model):
-    id_cargo_emp = models.FloatField(primary_key=True)
+    id_cargo_emp = models.AutoField(primary_key=True)
     cargo = models.CharField(max_length=50)
 
     class Meta:
@@ -246,7 +246,7 @@ class Region(models.Model):
 
 
 class Reporte(models.Model):
-    id_repote = models.FloatField(primary_key=True)
+    id_reporte = models.AutoField(primary_key=True)
     titulo = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=300)
     fecha_ingreso = models.DateField()

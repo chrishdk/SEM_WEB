@@ -15,4 +15,5 @@ urlpatterns = [
     path('modificarusuario/<usuario>/', modificarusuario, name="modificarusuario"),
     path('modificarasignacion/', modificarasignacion, name="modificarasignacion"),
     path('modificar_empleado/<rut>/', modemp, name="modemp"),
+
 ]

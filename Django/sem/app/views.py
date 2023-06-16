@@ -1,21 +1,60 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import connection
 import cx_Oracle
-from .forms import ReporteForm
+from .forms import EmpresaForm
 from django.contrib.auth.decorators import login_required
+from PIL import Image
+from io import BytesIO
 import base64
 
 
-
-# Create your views here.
+# Inicio
 @login_required(login_url='/accounts/login')
 def inicio(request):
-    return render(request,'app/index.html')
+    reporte_mes = contar_reportes_mes_actual()
+    reporte_dia = contar_reportes_dia_actual()
+    reporte_no_asignados = contar_reportes_no_asignados()
+
+    data = {
+        'reporte_mes': reporte_mes,
+        'reporte_dia': reporte_dia,
+        'reporte_no_asignados': reporte_no_asignados,
+    }
+
+    return render(request, 'app/index.html', data)
 
 
+def contar_reportes_mes_actual():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
 
-# def inicio(request):
-#     return render(request,'app/inicio.html')
+    cantidad = cursor.var(int)
+    cursor.callproc('contar_reportes_mes_actual', [cantidad])
+
+    return cantidad.getvalue()
+
+
+def contar_reportes_dia_actual():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+
+    cantidad = cursor.var(int)
+    cursor.callproc('contar_reportes_dia_actual', [cantidad])
+
+    return cantidad.getvalue()
+
+
+def contar_reportes_no_asignados():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+
+    cantidad = cursor.var(int)
+    cursor.callproc('contar_reportes_no_asignados', [cantidad])
+
+    return cantidad.getvalue()
+
+
+# Formulario de empleados
 @login_required(login_url='/accounts/login')
 def formr(request):
     if request.method == 'POST':
@@ -33,46 +72,43 @@ def formr(request):
         asignado = request.POST.get('asignado')
 
         salida = SP_AGREGAR_REPORTE(
-                                    id_repote,
-                                    titulo,
-                                    descripcion,
-                                    fecha_ingreso,
-                                    usuario_usuario,
-                                    prioridad_id_prioridad,
-                                    piso_id_piso,
-                                    sector_id_sector,
-                                    estado_r_id_estado,
-                                    sucursal_id_sucursal,
-                                    imagen,
-                                    asignado)
+            id_repote,
+            titulo,
+            descripcion,
+            fecha_ingreso,
+            usuario_usuario,
+            prioridad_id_prioridad,
+            piso_id_piso,
+            sector_id_sector,
+            estado_r_id_estado,
+            sucursal_id_sucursal,
+            imagen,
+            asignado)
 
-    return render(request,'app/form_rep.html')
-
-
+    return render(request, 'app/form_rep.html')
 
 
+# formulario de solicitudes
 @login_required(login_url='/accounts/login')
 def formsolicitud(request):
     if request.method == 'POST':
         id_solicitud = request.POST.get('id_solicitud')
         solicitud = request.POST.get('solicitud')
         fecha = request.POST.get('fecha')
-        estado_s_id_estado_solicitud = request.POST.get('estado_s_id_estado_solicitud')
+        estado_s_id_estado_solicitud = request.POST.get(
+            'estado_s_id_estado_solicitud')
         sucursal_id_sucursal = request.POST.get('sucursal_id_sucursal')
         usuario_usuario = request.POST.get('usuario_usuario')
 
-
         salida = SP_AGREGAR_SOLICITUD(
-                                    id_solicitud ,
-    solicitud ,
-    fecha ,
-    estado_s_id_estado_solicitud ,
-    sucursal_id_sucursal ,
-    usuario_usuario)
+            id_solicitud,
+            solicitud,
+            fecha,
+            estado_s_id_estado_solicitud,
+            sucursal_id_sucursal,
+            usuario_usuario)
 
-
-    return render(request,'app/form_soli.html', )
-
+    return render(request, 'app/form_soli.html', )
 
 
 @login_required(login_url='/accounts/login')
@@ -96,8 +132,84 @@ def reporte(request):
     data = {
         'reporte': arreglo
     }
+    
+    if request.method == 'POST':
+        id_reporte = request.POST.get('id_reporte')
+        titulo = request.POST.get('titulo')
+        descripcion = request.POST.get('descripcion')
+        fecha_ingreso = request.POST.get('fecha_ingreso')
+        usuario_usuario = request.POST.get('usuario_usuario')
+        prioridad_id_prioridad = request.POST.get('prioridad_id_prioridad')
+        piso_id_piso = request.POST.get('piso_id_piso')
+        sector_id_sector = request.POST.get('sector_id_sector')
+        estado_r_id_estado = request.POST.get('estado_r_id_estado')
+        sucursal_id_sucursal = request.POST.get('sucursal_id_sucursal')
+        imagen = request.FILES['imagen']
+        asignado = request.POST.get('asignado')
+
+        image = Image.open(imagen)
+        max_size = (500, 500)
+        image.thumbnail(max_size)
+
+        image_buffer = BytesIO()
+        image.save(image_buffer, format='JPEG')
+        image_data = image_buffer.getvalue()
+
+        salida = SP_AGREGAR_REPORTE(
+
+            titulo,
+            descripcion,
+            fecha_ingreso,
+            usuario_usuario,
+            prioridad_id_prioridad,
+            piso_id_piso,
+            sector_id_sector,
+            estado_r_id_estado,
+            sucursal_id_sucursal,
+            image_data,
+            asignado)
 
     return render(request, 'app/reporte.html', data)
+
+def SP_AGREGAR_REPORTE(
+
+        titulo,
+        descripcion,
+        fecha_ingreso,
+        usuario_usuario,
+        prioridad_id_prioridad,
+        piso_id_piso,
+        sector_id_sector,
+        estado_r_id_estado,
+        sucursal_id_sucursal,
+        imagen,asignado):
+    
+
+
+
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_AGREGAR_REPORTE", [
+
+        titulo,
+        descripcion,
+        fecha_ingreso,
+        usuario_usuario,
+        prioridad_id_prioridad,
+        piso_id_piso,
+        sector_id_sector,
+        estado_r_id_estado,
+        sucursal_id_sucursal,
+        imagen,asignado,
+        salida])
+    
+    print("Valor de id_empresa:", titulo)
+    return salida.getvalue()
+
+
+
+
 
 
 
@@ -106,23 +218,23 @@ def usuarios(request):
     data_usuarios = SP_LISTAR_USUARIO()
 
     data = {
-        'usuarios':data_usuarios
+        'usuarios': data_usuarios
     }
-    return render(request,'app/usuarios.html', data)
+    return render(request, 'app/usuarios.html', data)
 
 
-
+# Pagina empleado
 
 @login_required(login_url='/accounts/login')
 def empleado(request):
     datos_empleado = sp_listar_empleado()
+
     arreglo = []
 
     for i in datos_empleado:
         imagen = i[9]
         if imagen is not None:
-            # imagen_base64 = str(base64.b64encode(imagen.read()), 'utf-8')
-            imagen_base64 = None
+            imagen_base64 = str(base64.b64encode(imagen.read()), 'utf-8')
         else:
             imagen_base64 = None
 
@@ -134,16 +246,10 @@ def empleado(request):
 
     data = {
         'empleado': arreglo,
-        'cargo':listado_cargo(),
-        'sucursal':listado_sucursal()
+        'cargo': listado_cargo(),
+        'sucursal': listado_sucursal()
     }
 
-
-    #     data= {
-    #     'cargo':listado_cargo(),
-    #     'sucursal':listado_sucursal()
-         
-    # }
     if request.method == 'POST':
         rut = request.POST.get('rut')
         dv = request.POST.get('dv')
@@ -154,22 +260,54 @@ def empleado(request):
         email = request.POST.get('email')
         cargo = request.POST.get('cargo')
         sucursal = request.POST.get('sucursal')
-        imagen = request.FILES['imagen'].read()
+        imagen = request.FILES['imagen']
 
-        salida = agregar_empleado(rut,dv,p_nombre,s_nombre,p_apellido,s_apellido,email,cargo,sucursal,imagen)
+        image = Image.open(imagen)
+        max_size = (500, 500)
+        image.thumbnail(max_size)
 
-    return render(request,'app/emp.html', data)
+        image_buffer = BytesIO()
+        image.save(image_buffer, format='JPEG')
+        image_data = image_buffer.getvalue()
+
+        salida = agregar_empleado(
+            rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
+
+    return render(request, 'app/emp.html', data)
 
 
+def sp_listar_empleado():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_LISTAR_EMPLEADO", [out_cur])
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
+# Fin pag empleado
+
+
+def SP_IMAGEN_EMPELADO_F():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_IMAGEN_EMPELADO_F", [out_cur])
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
 
 
 @login_required(login_url='/accounts/login')
 def formempleado(request):
 
-    data= {
-        'cargo':listado_cargo(),
-        'sucursal':listado_sucursal()
-         
+    data = {
+        'cargo': listado_cargo(),
+        'sucursal': listado_sucursal(),
+
     }
     if request.method == 'POST':
         rut = request.POST.get('rut')
@@ -183,34 +321,30 @@ def formempleado(request):
         sucursal = request.POST.get('sucursal')
         imagen = request.FILES['imagen'].read()
 
-        salida = agregar_empleado(rut,dv,p_nombre,s_nombre,p_apellido,s_apellido,email,cargo,sucursal,imagen)
+        salida = agregar_empleado(
+            rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, imagen)
 
-    return render(request,'app/form_emp.html', data)
-
-
-
-
+    return render(request, 'app/form_emp.html', data)
 
 
 @login_required(login_url='/accounts/login')
-def modemp(request,rut):
+def modemp(request, rut):
 
     # producto = get_object_or_404(Empleado, id=id)
 
     datos_empleados = sp_listar_empleado_f(rut)
 
-
     arreglo = []
     for i in datos_empleados:
-            data ={
-                'data': i,
-                'imagen': str(base64.b64encode(i[9].read()),'utf-8')
+        data = {
+            'data': i,
+            'imagen': str(base64.b64encode(i[9].read()), 'utf-8')
         }
-            arreglo.append(data)    
+        arreglo.append(data)
     data = {
-            'empleado':arreglo,
-            'cargo':listado_cargo(),
-            'sucursal':listado_sucursal()
+        'empleado': arreglo,
+        'cargo': listado_cargo(),
+        'sucursal': listado_sucursal()
 
     }
 
@@ -224,63 +358,56 @@ def modemp(request,rut):
         email = request.POST.get('email')
         cargo = request.POST.get('cargo')
         sucursal = request.POST.get('sucursal')
-        imagen = request.FILES['imagen'].read()
+        imagen = request.FILES['imagen']
 
-        salida = SP_MODIFICAR_EMPLEADO(rut,dv,p_nombre,s_nombre,p_apellido,s_apellido,email,cargo,sucursal,imagen)
+        # Redimensionar imagen
+        max_size = (500, 500)
+        image = Image.open(imagen)
+        image.thumbnail(max_size)
+
+        # Convertir la imagen redimensionada a bytes
+        image_buffer = BytesIO()
+        image.save(image_buffer, format='JPEG')
+        image_data = image_buffer.getvalue()
+
+        salida = SP_MODIFICAR_EMPLEADO(
+            rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
         return redirect('empleado')
 
-    return render(request,'app/mod_emp.html', data)
-
-
-
-
-
-
-
+    return render(request, 'app/mod_emp.html', data)
 
 
 def solicitud(request):
     data_solicitud = SP_LISTAR_SOLICITUD()
 
     data = {
-        'solicitud':data_solicitud
+        'solicitud': data_solicitud
     }
-    return render(request,'app/solicitud.html', data)
-
-
-
-
-
-
-
-
+    return render(request, 'app/solicitud.html', data)
 
 
 def SP_LISTAR_SOLICITUD():
-    django_cursor =connection.cursor()
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
     cursor.callproc("SP_LISTAR_SOLICITUD", [out_cur])
-    lista =[]
+    lista = []
     for fila in out_cur:
         lista.append(fila)
     return lista
 
 
 def SP_LISTAR_USUARIO():
-    django_cursor =connection.cursor()
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
     cursor.callproc("SP_LISTAR_USUARIO", [out_cur])
-    lista =[]
+    lista = []
     for fila in out_cur:
         lista.append(fila)
     return lista
-
-
-
 
 
 # def listado_usuarios():
@@ -295,148 +422,111 @@ def SP_LISTAR_USUARIO():
 #     return lista
 
 # listo
-def sp_listar_empleado():
-    django_cursor =connection.cursor()
-    cursor = django_cursor.connection.cursor()
-    out_cur = django_cursor.connection.cursor()
 
-    cursor.callproc("SP_LISTAR_EMPLEADO", [out_cur])
-    lista =[]
-    for fila in out_cur:
-        lista.append(fila)
-    return lista
 
 def SP_LISTAR_SOLICITUD():
-    django_cursor =connection.cursor()
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
     cursor.callproc("SP_LISTAR_SOLICITUD", [out_cur])
-    lista =[]
+    lista = []
     for fila in out_cur:
         lista.append(fila)
     return lista
 
 # listo
+
+
 def listar_reporte():
-    django_cursor =connection.cursor()
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
     cursor.callproc("sp_listar_reporte", [out_cur])
-    lista =[]
+    lista = []
     for fila in out_cur:
         lista.append(fila)
-    
+
     return lista
 
 
 # listo
 def listado_sucursal():
-    django_cursor =connection.cursor()
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
     cursor.callproc("sp_listar_sucursal", [out_cur])
-    lista =[]
+    lista = []
     for fila in out_cur:
         lista.append(fila)
         return lista
-    
+
 
 def listado_cargo():
-    django_cursor =connection.cursor()
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
     cursor.callproc("sp_listar_cargo", [out_cur])
-    lista =[]
+    lista = []
     for fila in out_cur:
         lista.append(fila)
         return lista
-    
-def SP_AGREGAR_SOLICITUD(id_solicitud ,
-    solicitud ,
-    fecha ,
-    estado_s_id_estado_solicitud ,
-    sucursal_id_sucursal  ,
-    usuario_usuario):
-    django_cursor =connection.cursor()
+
+
+def SP_AGREGAR_SOLICITUD(id_solicitud,
+                         solicitud,
+                         fecha,
+                         estado_s_id_estado_solicitud,
+                         sucursal_id_sucursal,
+                         usuario_usuario):
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
-    cursor.callproc("SP_AGREGAR_SOLICITUD", [id_solicitud ,
-    solicitud ,
-    fecha ,
-    estado_s_id_estado_solicitud ,
-    sucursal_id_sucursal  ,
-    usuario_usuario,
-    salida])
+    cursor.callproc("SP_AGREGAR_SOLICITUD", [id_solicitud,
+                                             solicitud,
+                                             fecha,
+                                             estado_s_id_estado_solicitud,
+                                             sucursal_id_sucursal,
+                                             usuario_usuario,
+                                             salida])
     return salida.getvalue()
 
 
-def agregar_empleado(rut,dv,p_nombre,s_nombre,p_apellido,s_apellido,email,cargo,sucursal,imagen):
-    django_cursor =connection.cursor()
+def agregar_empleado(rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, imagen):
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
-    cursor.callproc("SP_AGREGAR_EMPLEADO", [rut,dv,p_nombre,s_nombre,p_apellido,s_apellido,email,cargo,sucursal,imagen,salida])
-    return salida.getvalue()
-
-     
-def SP_MODIFICAR_EMPLEADO(rut,dv,p_nombre,s_nombre,p_apellido,s_apellido,email,cargo,sucursal,imagen):
-    django_cursor =connection.cursor()
-    cursor = django_cursor.connection.cursor()
-    salida = cursor.var(cx_Oracle.NUMBER)
-    cursor.callproc("SP_MODIFICAR_EMPLEADO", [rut,dv,p_nombre,s_nombre,p_apellido,s_apellido,email,cargo,sucursal,imagen])
+    cursor.callproc("SP_AGREGAR_EMPLEADO", [
+                    rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, imagen, salida])
     return salida.getvalue()
 
 
-def SP_AGREGAR_REPORTE(
-    id_repote,
-    titulo,
-    descripcion,
-    fecha_ingreso,
-    usuario_usuario,
-    prioridad_id_prioridad,
-    piso_id_piso,
-    sector_id_sector,
-    estado_r_id_estado,
-    sucursal_id_sucursal,
-    imagen,
-    asignado):
-
-    django_cursor =connection.cursor()
+def SP_MODIFICAR_EMPLEADO(rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, imagen):
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
-    cursor.callproc("SP_AGREGAR_REPORTE", [
-    id_repote,
-    titulo,
-    descripcion,
-    fecha_ingreso,
-    usuario_usuario,
-    prioridad_id_prioridad,
-    piso_id_piso,
-    sector_id_sector,
-    estado_r_id_estado,
-    sucursal_id_sucursal,
-    imagen,
-    asignado,
-    salida])
+    cursor.callproc("SP_MODIFICAR_EMPLEADO", [
+                    rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, imagen])
     return salida.getvalue()
+
+
 
 
 
 # listo
 def sp_listar_empleado_f(rut):
-    django_cursor =connection.cursor()
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
-    cursor.callproc("SP_LISTAR_EMPLEADO_F", [out_cur,rut])
-    lista =[]
+    cursor.callproc("SP_LISTAR_EMPLEADO_F", [out_cur, rut])
+    lista = []
     for fila in out_cur:
         lista.append(fila)
     return lista
-
 
 
 @login_required(login_url='/accounts/login')
@@ -448,63 +538,55 @@ def forminsumo(request):
         color = request.POST.get('estado_s_id_estado_solicitud')
         sucursal_id_sucursal = request.POST.get('sucursal_id_sucursal')
 
-
         salida = SP_AGREGAR_INSUMO(
-                                    id_insumo,
-    insumo,
-    stock,
-    color,
-    sucursal_id_sucursal)
+            id_insumo,
+            insumo,
+            stock,
+            color,
+            sucursal_id_sucursal)
 
-
-    return render(request,'app/form_ins.html' )
+    return render(request, 'app/form_ins.html')
 
 
 def SP_AGREGAR_INSUMO(id_insumo,
-    insumo,
-    stock,
-    color,
-    sucursal_id_sucursal):
-    django_cursor =connection.cursor()
+                      insumo,
+                      stock,
+                      color,
+                      sucursal_id_sucursal):
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc("SP_AGREGAR_INSUMO", [id_insumo,
-    insumo,
-    stock,
-    color,
-    sucursal_id_sucursal,
-    salida])
+                                          insumo,
+                                          stock,
+                                          color,
+                                          sucursal_id_sucursal,
+                                          salida])
     return salida.getvalue()
-
-
 
 
 # listo
 def sp_listar_insumo_f(id_insumo):
-    django_cursor =connection.cursor()
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
-    cursor.callproc("SP_LISTAR_INSUMO_F", [out_cur,id_insumo])
-    lista =[]
+    cursor.callproc("SP_LISTAR_INSUMO_F", [out_cur, id_insumo])
+    lista = []
     for fila in out_cur:
         lista.append(fila)
     return lista
 
 
-
-
-
-
 @login_required(login_url='/accounts/login')
-def modins(request,id_insumo):
+def modins(request, id_insumo):
 
     # producto = get_object_or_404(Empleado, id=id)
 
     datos_insumos = sp_listar_insumo_f(id_insumo)
-   
+
     data = {
-            'insumo':datos_insumos
+        'insumo': datos_insumos
 
     }
 
@@ -515,57 +597,50 @@ def modins(request,id_insumo):
         color = request.POST.get('color')
         sucursal_id_sucursal = request.POST.get('sucursal_id_sucursal')
 
-        salida = SP_MODIFICAR_INSUMO(id_insumo,insumo,stock,color,sucursal_id_sucursal)
+        salida = SP_MODIFICAR_INSUMO(
+            id_insumo, insumo, stock, color, sucursal_id_sucursal)
 
-
-    return render(request,'app/mod_insumo.html', data)
-
-
-
-
-
+    return render(request, 'app/mod_insumo.html', data)
 
 
 def SP_MODIFICAR_INSUMO(id_insumo,
-    insumo,
-    stock,
-    color,
-    sucursal_id_sucursal):
-    django_cursor =connection.cursor()
+                        insumo,
+                        stock,
+                        color,
+                        sucursal_id_sucursal):
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc("SP_MODIFICAR_INSUMO", [id_insumo,
-    insumo,
-    stock,
-    color,
-    sucursal_id_sucursal])
+                                            insumo,
+                                            stock,
+                                            color,
+                                            sucursal_id_sucursal])
     return salida.getvalue()
-
-
 
 
 # listo
 def sp_listar_usuario_f(usuario):
-    django_cursor =connection.cursor()
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
-    cursor.callproc("SP_LISTAR_USUARIO_F", [out_cur,usuario])
-    lista =[]
+    cursor.callproc("SP_LISTAR_USUARIO_F", [out_cur, usuario])
+    lista = []
     for fila in out_cur:
         lista.append(fila)
     return lista
 
 
 @login_required(login_url='/accounts/login')
-def modificarusuario(request,usuario):
+def modificarusuario(request, usuario):
 
     # producto = get_object_or_404(Empleado, id=id)
 
     datos_usuario = sp_listar_usuario_f(usuario)
-   
+
     data = {
-            'usuario':datos_usuario
+        'usuario': datos_usuario
 
     }
 
@@ -575,87 +650,88 @@ def modificarusuario(request,usuario):
         empleado_rut = request.POST.get('empleado_rut')
         estado_u_id_estado_u = request.POST.get('estado_u_id_estado_u')
 
+        salida = SP_MODIFICAR_USUARIO(
+            usuario, contrasena, empleado_rut, estado_u_id_estado_u)
 
-        salida = SP_MODIFICAR_USUARIO(usuario,contrasena,empleado_rut,estado_u_id_estado_u)
+    return render(request, 'app/mod_usuario.html', data)
 
 
-    return render(request,'app/mod_usuario.html', data)
-
-def SP_MODIFICAR_USUARIO(usuario,contrasena,empleado_rut,estado_u_id_estado_u):
-    django_cursor =connection.cursor()
+def SP_MODIFICAR_USUARIO(usuario, contrasena, empleado_rut, estado_u_id_estado_u):
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc("SP_MODIFICAR_USUARIO", [usuario,
-    contrasena,
-    empleado_rut,
-    estado_u_id_estado_u])
+                                             contrasena,
+                                             empleado_rut,
+                                             estado_u_id_estado_u])
     return salida.getvalue()
 
 # listo
+
+
 def sp_listar_reporte_f(id_reporte):
-    django_cursor =connection.cursor()
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     out_cur = django_cursor.connection.cursor()
 
-    cursor.callproc("SP_LISTAR_reporte_F", [out_cur,id_reporte])
-    lista =[]
+    cursor.callproc("SP_LISTAR_reporte_F", [out_cur, id_reporte])
+    lista = []
     for fila in out_cur:
         lista.append(fila)
     return lista
 
 
 @login_required(login_url='/accounts/login')
-def modificarasignacion(request,idreporte):
+def modificarasignacion(request, idreporte):
 
     datos_reporte = sp_listar_reporte_f(id_reporte)
-   
+
     data = {
-            'usuario':datos_reporte
+        'usuario': datos_reporte
 
     }
 
     if request.method == 'POST':
-        id_reporte = request.POST.get('id_reporte') 
+        id_reporte = request.POST.get('id_reporte')
         titulo = request.POST.get('titulo')
-        descripcion = request.POST.get('descripcion') 
+        descripcion = request.POST.get('descripcion')
         fecha_ingreso = request.POST.get('fecha_ingreso')
         usuario_usuario = request.POST.get('usuario_usuario')
 
-        salida = SP_MODIFICAR_reporte(id_reporte, 
-        titulo, 
-        descripcion, 
-        fecha_ingreso, 
-        usuario_usuario)
+        salida = SP_MODIFICAR_reporte(id_reporte,
+                                      titulo,
+                                      descripcion,
+                                      fecha_ingreso,
+                                      usuario_usuario)
 
+    return render(request, 'app/mod_asig_reporte.html')
 
-
-    return render(request,'app/mod_asig_reporte.html')
 
 def SP_MODIFICAR_reporte(id_repote,
-    titulo,
-    descripcion,
-    fecha_ingreso,
-    usuario_usuario,
-    prioridad_id_prioridad,
-    piso_id_piso,
-    sector_id_sector,
-    estado_r_id_estado,
-    sucursal_id_sucursal,
-    imagen,
-    asignado):
-    django_cursor =connection.cursor()
+                         titulo,
+                         descripcion,
+                         fecha_ingreso,
+                         usuario_usuario,
+                         prioridad_id_prioridad,
+                         piso_id_piso,
+                         sector_id_sector,
+                         estado_r_id_estado,
+                         sucursal_id_sucursal,
+                         imagen,
+                         asignado):
+    django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc("SP_MODIFICAR_reporte", [id_repote,
-    titulo,
-    descripcion,
-    fecha_ingreso,
-    usuario_usuario,
-    prioridad_id_prioridad,
-    piso_id_piso,
-    sector_id_sector,
-    estado_r_id_estado,
-    sucursal_id_sucursal,
-    imagen,
-    asignado])
+                                             titulo,
+                                             descripcion,
+                                             fecha_ingreso,
+                                             usuario_usuario,
+                                             prioridad_id_prioridad,
+                                             piso_id_piso,
+                                             sector_id_sector,
+                                             estado_r_id_estado,
+                                             sucursal_id_sucursal,
+                                             imagen,
+                                             asignado])
     return salida.getvalue()
