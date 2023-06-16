@@ -246,7 +246,7 @@ class Region(models.Model):
 
 
 class Reporte(models.Model):
-    id_reporte = models.AutoField(primary_key=True)
+    id_reporte = models.FloatField(primary_key=True)
     titulo = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=300)
     fecha_ingreso = models.DateField()

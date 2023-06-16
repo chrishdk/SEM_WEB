@@ -762,42 +762,58 @@ def prueba(request):
     }
     
     if request.method == 'POST':
-        id_reporte = request.POST.get('id_reporte')
-        titulo = request.POST.get('titulo')
-        descripcion = request.POST.get('descripcion')
-        fecha_ingreso = request.POST.get('fecha_ingreso')
-        usuario_usuario = request.POST.get('usuario_usuario')
-        prioridad_id_prioridad = request.POST.get('prioridad_id_prioridad')
-        piso_id_piso = request.POST.get('piso_id_piso')
-        sector_id_sector = request.POST.get('sector_id_sector')
-        estado_r_id_estado = request.POST.get('estado_r_id_estado')
-        sucursal_id_sucursal = request.POST.get('sucursal_id_sucursal')
-        imagen = request.FILES['imagen']
-        asignado = request.POST.get('asignado')
+        accion = request.POST.get('accion')
+        if accion == 'nuevo':
+            id_reporte = request.POST.get('id_reporte')
+            titulo = request.POST.get('titulo')
+            descripcion = request.POST.get('descripcion')
+            fecha_ingreso = request.POST.get('fecha_ingreso')
+            usuario_usuario = request.POST.get('usuario_usuario')
+            prioridad_id_prioridad = request.POST.get('prioridad_id_prioridad')
+            piso_id_piso = request.POST.get('piso_id_piso')
+            sector_id_sector = request.POST.get('sector_id_sector')
+            estado_r_id_estado = request.POST.get('estado_r_id_estado')
+            sucursal_id_sucursal = request.POST.get('sucursal_id_sucursal')
+            imagen = request.FILES['imagen']
+            asignado = request.POST.get('asignado')
 
-        image = Image.open(imagen)
-        max_size = (500, 500)
-        image.thumbnail(max_size)
+            image = Image.open(imagen)
+            max_size = (500, 500)
+            image.thumbnail(max_size)
 
-        image_buffer = BytesIO()
-        image.save(image_buffer, format='JPEG')
-        image_data = image_buffer.getvalue()
+            image_buffer = BytesIO()
+            image.save(image_buffer, format='JPEG')
+            image_data = image_buffer.getvalue()
 
-        salida = SP_AGREGAR_REPORTE(
+            salida = SP_AGREGAR_REPORTE(
 
-            titulo,
-            descripcion,
-            fecha_ingreso,
-            usuario_usuario,
-            prioridad_id_prioridad,
-            piso_id_piso,
-            sector_id_sector,
-            estado_r_id_estado,
-            sucursal_id_sucursal,
-            image_data,
-            asignado)
+                titulo,
+                descripcion,
+                fecha_ingreso,
+                usuario_usuario,
+                prioridad_id_prioridad,
+                piso_id_piso,
+                sector_id_sector,
+                estado_r_id_estado,
+                sucursal_id_sucursal,
+                image_data,
+                asignado)
+            
+        elif accion == 'asignar':
+            id_reporte = request.POST.get('id_reporte')
+            asignado = request.POST.get('asignado')
+
+            salida = SP_ASIGNAR_REPORTE(id_reporte,asignado)
 
     return render(request, 'app/prueba.html', data)
+
+
+def SP_ASIGNAR_REPORTE(id_reporte,asignado):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_ASIGNAR_REPORTE", [id_reporte,asignado])
+    return salida.getvalue()
 
 
 

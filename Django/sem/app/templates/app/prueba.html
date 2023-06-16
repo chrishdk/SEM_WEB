@@ -88,9 +88,111 @@
               {% endif %}
             </td>
             <td>
-              <button type="button" href="" class="btn btn-primary" data-toggle="modal" data-target="">
+
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AsignarReporte{{ forloop.counter }}">
                 Asignar
               </button>
+<!-- inicio del modal asignar reporte -->
+<div class="modal fade" id="AsignarReporte{{ forloop.counter }}" data-backdrop="static" data-keyboard="false" tabindex="-1"
+aria-labelledby="AsignarReporteLabel{{ forloop.counter }}" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="AsignarReporteLabel{{ forloop.counter }}">Asignar</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label">Id</label>
+        <input type="" class="form-control" name="id_reporte" value="{{ p.data.0 | title }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Titulo</label>
+        <input type="" class="form-control"  name="titulo" value="{{ p.data.1 | title }}">
+    </div>
+
+      <div class="mb-3">
+        <label class="col-form-label">Descripcion</label>
+        <input type="" class="form-control" name="descripcion" value="{{ p.data.2 | title }}">
+
+
+</div>
+<div class="mb-3">
+        <label class="col-form-label">Fecha Ingreso</label>
+        <input type="" class="form-control" name="fecha_ingreso" value="{{ p.data.3 | title }}">
+
+
+</div>
+<div class="mb-3">
+        <label class="col-form-label">Ingresado</label>
+        <input type="" class="form-control" name="usuario_usuario" value="{{ p.data.4 | title }}">
+
+
+</div>
+<div class="mb-3">
+        <label class="col-form-label">Prioridad</label>
+        <input type="" class="form-control"  name="prioridad_id_prioridad" value="{{ p.data.5 | title }}">
+      </div>
+
+
+      <div class="mb-3">
+        <label class="form-label">Piso</label>
+        <input type="" class="form-control" name="piso_id_piso" value="{{ p.data.6 | title }}">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Sector</label>
+        <input type="" class="form-control" name="sector_id_sector" value="{{ p.data.7 | title }}">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Estado</label>
+        <input type="" class="form-control" name="estado_r_id_estado" value="{{ p.data.8 | title }}">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Sucursal</label>
+        <input type="" class="form-control" name="sucursal_id_sucursal" value="{{ p.data.9 | title }}">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Asignado</label>
+        <input type="" class="form-control" name="asignado" value="{{ p.data.11 | title }}">
+      </div>
+
+      <div class="mb-3">
+        <label for="formFile" class="form-label"></label>
+        <input class="form-control" type="file" name="imagen">
+        
+      </div>
+
+
+      <input type="hidden" name="accion" value="asignar">
+      <button type="submit" class="btn btn-primary">Submit</button>
+
+
+
+
+</form>
+
+
+
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- Fin del modal asignar reporte -->
+
+
+
             </td>
           </tr>
           {% endfor %}
@@ -114,27 +216,79 @@
           </button>
         </div>
         <div class="modal-body">
-
-
-
           <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
-        
+        <div class="mb-3">
+            <label class="form-label">Id</label>
+            <input type="" class="form-control" name="id_reporte">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Titulo</label>
+            <input type="" class="form-control"  name="titulo">
+        </div>
+
+          <div class="mb-3">
+            <label class="col-form-label">Descripcion</label>
+            <input type="" class="form-control" name="descripcion">
 
 
-
-            {{ form }}
-
-            <div class="mb-3">
-                <label for="formFile" class="form-label"></label>
-                <input class="form-control" type="file" name="imagen">
-                
-              </div>
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Fecha Ingreso</label>
+            <input type="" class="form-control" name="fecha_ingreso">
 
 
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Ingresado</label>
+            <input type="" class="form-control" name="usuario_usuario">
 
+
+</div>
+<div class="mb-3">
+            <label class="col-form-label">Prioridad</label>
+            <input type="" class="form-control"  name="prioridad_id_prioridad">
+          </div>
+
+
+          <div class="mb-3">
+            <label class="form-label">Piso</label>
+            <input type="" class="form-control" name="piso_id_piso">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Sector</label>
+            <input type="" class="form-control" name="sector_id_sector">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Estado</label>
+            <input type="" class="form-control" name="estado_r_id_estado">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Sucursal</label>
+            <input type="" class="form-control" name="sucursal_id_sucursal">
+          </div>
+
+          <div class="mb-3">
+            <label for="formFile" class="form-label"></label>
+            <input class="form-control" type="file" name="imagen">
+            
+          </div>
+
+          <!-- <div class="mb-3">
+            <label class="form-label">Asignado</label>
+            <input type="" class="form-control" name="asignado">
+          </div> -->
+          <input type="hidden" name="accion" value="nuevo">
           <button type="submit" class="btn btn-primary">Submit</button>
+
+
+
+
     </form>
 
 
