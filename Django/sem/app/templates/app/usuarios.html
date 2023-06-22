@@ -8,13 +8,16 @@
 
     <!-- integracion de js personalizado -->
 {% block js %}
+
 {% endblock %}
 
     <!-- integracion de css personalizado -->
 {% block css %}
+
 {% endblock %}
 
 {% block contenido %}
+<div class="container-fluid">
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Usuarios</h1>
                     
@@ -45,16 +48,33 @@
                                             <td>{{ p.0 | title }}</td>
                                             <td>{{ p.1 | title }}</td>
                                             <td>{{ p.2 | title }}</td>
-                                            <td>{{ p.3 | title }}</td>
+                                            {% if p.3 == 2%}
+                                                <td>Deshabilitado</td>
+                                                {% elif p.3 == 1 %}
+                                                <td>Habilitado</td>
+                                                {% endif %}
                                             <td>
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                                    habilitar
-                                                  </button>
-                                            
-                                            
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                                    Deshabilitar
-                                                  </button>
+                                                
+
+                                                {% if p.3 == 2 %}
+                                                    <form action="" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="accion" value="estado">
+                                                        <input type="hidden" name="usuario" value="{{ p.0 }}">
+                                                        <input type="hidden" name="estado_u_id_estado_u" value="1">
+                                                        <button type="submit" class="btn btn-success">Habilitar</button>
+                                                    </form>
+                                                    {% elif p.3 == 1 %}
+                                                    <form action="" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="accion" value="estado">
+                                                        <input type="hidden" name="usuario" value="{{ p.0 }}">
+                                                        <input type="hidden" name="estado_u_id_estado_u" value="2">
+                                                        <button type="submit" class="btn btn-danger">Deshabilitar</button>
+                                                    </form>
+                                                {% endif %}
+
+                                                  
                                             </td>
 
                                         </tr>
@@ -66,5 +86,5 @@
                             </div>
                         </div>
                     </div>
-
+                </div>
                     {% endblock %}

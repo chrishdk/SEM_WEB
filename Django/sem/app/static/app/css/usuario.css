@@ -1,0 +1,6 @@
+.password-field input[type="password"].show-password {
+    -webkit-text-security: none; /* Mostrar el texto */
+    -moz-text-security: none;
+    -ms-text-security: none;
+    text-security: none;
+  }
