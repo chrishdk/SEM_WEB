@@ -43,6 +43,7 @@
             <th>Piso</th>
             <th>sector</th>
             <th>estado</th>
+            <th>Sucursal</th>
             <th>Asignado</th>
             <th>Imagen</th>
             <th>Accion</th>
@@ -57,11 +58,20 @@
             <td>{{ p.data.2 | title }}</td>
             <td>{{ p.data.3 | title }}</td>
             <td>{{ p.data.4  }}</td>
-            <td>{{ p.data.5 | title }}</td>
-            <td>{{ p.data.6 | title }}</td>
-            <td>{{ p.data.7 | title }}</td>
-            <td>{{ p.data.8 | title }}</td>
+            <!-- Prioridad -->
+            <td>{{ p.data.13 | title }}</td>
+            <!-- Piso -->
+            <td>{{ p.data.14 | title }}</td>
+            <!-- Sector -->
+            <td>{{ p.data.15 | title }}</td>
+            <!-- Estado -->
+            <td>{{ p.data.16 | title }}</td>
+            <!-- sucursal -->
+            <td>{{ p.data.17 | title }}</td>
+            <!-- Asignado -->
             <td>{{ p.data.11 }}</td>
+            
+            <!-- Imagen -->
             <td>
               {% if p.imagen %}
               <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
@@ -112,56 +122,56 @@ aria-labelledby="AsignarReporteLabel{{ forloop.counter }}" aria-hidden="true">
 
     <div class="mb-3">
         <label class="form-label">Id</label>
-        <input type="number" readonly class="form-control" name="id_reporte" value="{{ p.data.0 | title }}">
+        <input type="number" readonly class="form-control" name="id_reporte" value="{{ p.data.0  }}">
     </div>
 
     <div class="mb-3">
         <label class="form-label">Titulo</label>
-        <input type="" readonly class="form-control" name="titulo" value="{{ p.data.1 | title }}">
+        <input type="" readonly class="form-control" name="titulo" value="{{ p.data.1  }}">
     </div>
 
       <div class="mb-3">
         <label class="col-form-label">Descripcion</label>
-        <input type="" readonly class="form-control" name="descripcion" value="{{ p.data.2 | title }}">
+        <input type="" readonly class="form-control" name="descripcion" value="{{ p.data.2  }}">
 
 
 </div>
 <div class="mb-3">
         <label class="col-form-label">Fecha Ingreso</label>
-        <input type="" readonly class="form-control" name="fecha_ingreso" value="{{ p.data.3 | title }}">
+        <input type="" readonly class="form-control" name="fecha_ingreso" value="{{ p.data.3  }}">
 
 
 </div>
 <div class="mb-3">
         <label class="col-form-label">Ingresado</label>
-        <input type="" readonly class="form-control" name="usuario_usuario" value="{{ p.data.4 | title }}">
+        <input type="" readonly class="form-control" name="usuario_usuario" value="{{ p.data.4  }}">
 
 
 </div>
 <div class="mb-3">
         <label class="col-form-label">Prioridad</label>
-        <input type="" readonly class="form-control"  name="prioridad_id_prioridad" value="{{ p.data.5 | title }}">
+        <input type="" readonly class="form-control"  name="prioridad_id_prioridad" value="{{ p.data.5  }}">
       </div>
 
 
       <div class="mb-3">
         <label class="form-label">Piso</label>
-        <input type="" readonly class="form-control" name="piso_id_piso" value="{{ p.data.6 | title }}">
+        <input type="" readonly class="form-control" name="piso_id_piso" value="{{ p.data.6  }}">
       </div>
 
       <div class="mb-3">
         <label class="form-label">Sector</label>
-        <input type="" readonly class="form-control" name="sector_id_sector" value="{{ p.data.7 | title }}">
+        <input type="" readonly class="form-control" name="sector_id_sector" value="{{ p.data.7  }}">
       </div>
 
       <div class="mb-3">
         <label class="form-label">Estado</label>
-        <input type="" readonly class="form-control" name="estado_r_id_estado" value="{{ p.data.8 | title }}">
+        <input type="" readonly class="form-control" name="estado_r_id_estado" value="{{ p.data.8  }}">
       </div>
 
       <div class="mb-3">
         <label class="form-label">Sucursal</label>
-        <input type="" readonly class="form-control" name="sucursal_id_sucursal" value="{{ p.data.9 | title }}">
+        <input type="" readonly class="form-control" name="sucursal_id_sucursal" value="{{ p.data.9  }}">
       </div>
 
       <div class="mb-3">
