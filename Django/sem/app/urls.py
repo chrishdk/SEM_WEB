@@ -1,11 +1,13 @@
 from django.urls import path
-from .views import reporte,inicio,empleado,usuarios, formempleado,formr,modemp,solicitud,formsolicitud,forminsumo,modins,modificarusuario,modificarasignacion,prueba,prueba_emp
+from .views import reporte,inicio,empleado,usuarios, formempleado,formr,modemp,solicitud,formsolicitud,forminsumo,modins,modificarusuario,modificarasignacion,prueba,prueba_emp,insumo,historial
 
 urlpatterns = [
     path('', inicio, name="inicio"),
     path('reporte/', reporte, name="reporte"),
     path('usuarios/', usuarios, name="usuarios"),
     path('empleado/', empleado, name="empleado"),
+    path('insumo/', insumo, name="insumo"),
+    path('historial/', historial, name="historial"),
     path('formempelado/', formempleado, name="formempelado"),
     path('formr/', formr, name="formr"),
     path('formsolicitud/', formsolicitud, name="formsoli"),

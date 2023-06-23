@@ -206,7 +206,28 @@ def listar_reporte():
 
     return lista
 
+@login_required(login_url='/accounts/login')
+def insumo(request):
+    data_insumos = SP_LISTAR_INSUMO()
 
+    data = {
+         'insumos': data_insumos
+     }
+
+    
+        
+    return render(request, 'app/insumo.html',data)
+
+
+def SP_LISTAR_INSUMO():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+    cursor.callproc("SP_LISTAR_INSUMO", [out_cur])
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
 
 
 
@@ -476,44 +497,28 @@ def SP_AGREGAR_SOLICITUD(solicitud,sucursal,solicitado):
 
 
 
-def SP_AGREGAR_INSUMO(id_insumo,
-                      insumo,
-                      stock,
-                      color,
-                      sucursal_id_sucursal):
+
+
+@login_required(login_url='/accounts/login')
+def historial(request):
+    data_historial = SP_LISTAR_HISTORIAL()
+
+    data = {
+        'historial': data_historial,
+    }
+    return render(request, 'app/historial.html', data)
+
+
+def SP_LISTAR_HISTORIAL():
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
-    salida = cursor.var(cx_Oracle.NUMBER)
-    cursor.callproc("SP_AGREGAR_INSUMO", [id_insumo,
-                                          insumo,
-                                          stock,
-                                          color,
-                                          sucursal_id_sucursal,
-                                          salida])
-    return salida.getvalue()
+    out_cur = django_cursor.connection.cursor()
 
-
-def SP_MODIFICAR_INSUMO(id_insumo,
-                        insumo,
-                        stock,
-                        color,
-                        sucursal_id_sucursal):
-    django_cursor = connection.cursor()
-    cursor = django_cursor.connection.cursor()
-    salida = cursor.var(cx_Oracle.NUMBER)
-    cursor.callproc("SP_MODIFICAR_INSUMO", [id_insumo,
-                                            insumo,
-                                            stock,
-                                            color,
-                                            sucursal_id_sucursal])
-    return salida.getvalue()
-
-
-
-
-
-
-
+    cursor.callproc("SP_LISTAR_HISTORIAL", [out_cur])
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
 
 
 

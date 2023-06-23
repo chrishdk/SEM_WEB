@@ -1,0 +1,53 @@
+{% extends 'app/base2.html' %} {% load static %}
+
+<!-- integracion de js personalizado -->
+{% block js %} {% endblock %}
+
+<!-- integracion de css personalizado -->
+{% block css %}
+<link href="{% static 'app/css/logo.css' %}" rel="stylesheet" />
+{% endblock %} {% block contenido %}
+<!-- Page Heading -->
+<div class="container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">historial</h1>
+
+  </div>
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Tabla historial</h6>
+    </div>
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table
+          class="table table-bordered"
+          id="dataTable"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Descripcion</th>
+              <th>Ingresado</th>
+            </tr>
+          </thead>
+          {% for h in historial %}
+          <tbody>
+            <tr>
+              <td>{{h.0}}</td>
+              <td>{{h.1}}</td>
+              <td>{{h.3}}</td> 
+              <td>{{h.2}}</td>
+            </tr>
+          </tbody>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
