@@ -5,306 +5,33 @@
 
 <!-- integracion de css personalizado -->
 {% block css %}
+
 <link href="{% static 'app/css/logo.css' %}" rel="stylesheet" />
+<link src="{% static 'app/css/prueba_emp.css' %}" rel="stylesheet" />
 {% endblock %} {% block contenido %}
-<!-- Page Heading -->
+
 <div class="container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-2 text-gray-800"></h1>
+  </div>
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Empleados</h1>
-
-        <!-- Boton modal ingresar empleado -->
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#staticBackdrop">
-            Ingresar Empleado
-        </button>
-        <!-- Fin Boton modal ingresar empleado -->
-        
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Tabla de pepe</h6>
     </div>
 
-
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tabla de empleados</h6>
+    <div class="card-body">
+      <div class="table-responsive">
+        <div class="centered-content">
+          <img
+            src="{% static 'app/img/pepefrg-4.gif' %}"
+            alt="GIF"
+            class="moving-image"
+          />
         </div>
-
-
-
-        <div class="card-body">
-            <div class="table-responsive">
-
-<!-- Inicio Tabla Empleados -->
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Rut</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>Correo</th>
-                            <th>Cargo</th>
-                            <th>Prioridad</th>
-                            <th>Sucursal</th>
-                            <th>Opcion</th>
-                            <th>Imagen</th>
-
-                        </tr>
-                    </thead>
-
-                    {% for p in empleado %}
-                    <tbody>
-
-                        <tr>
-                            <td>{{ p.data.0 }}-{{ p.data.1 }}</td>
-                            <td>{{ p.data.2 }} {{ p.data.3 }}</td>
-                            <td>{{ p.data.4 }} {{ p.data.5 }}</td>
-                            <td>{{ p.data.6 | title }}</td>
-                            <td>{{ p.data.7 | title }}</td>
-                            <td>{{ p.data.8 | title }}</td>
-                            <td>sucursal</td>
-                            <form action="" method="post" enctype="multipart/form-data">
-                                <td>
-<!-- Inicio del Boton Modal modificar -->
-                                    <button type="button"  data-toggle="modal" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"
-                                        data-target="#Modificar{{ forloop.counter }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                                          </svg>
-                                        
-                                    </button>
-<!-- Fin del Boton Modal modificar -->
-
-<!-- Inicio del Modal modificar -->
-                                    <div class="modal fade" id="Modificar{{ forloop.counter }}" data-backdrop="static"
-                                        data-keyboard="false" tabindex="-1"
-                                        aria-labelledby="ModificarLabel{{ forloop.counter }}" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="ModificarLabel{{ forloop.counter }}">
-                                                        Modificar</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <!-- <form method="POST" enctype="multipart/form-data" action=""> -->
-                                                    {% csrf_token %}
-
-
-                                                    <div class="mb-3">
-
-                                                        <label class="form-label">Rut</label>
-                                                        <input type="text" readonly class="form-control " name="rut"
-                                                            value="{{p.data.0}}">
-                                                        <label class="form-label">Verificador</label>
-                                                        <input type="text" readonly class="form-control" name="dv"
-                                                            value="{{p.data.1}}">
-
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <label class="col-form-label">Primer nombre</label>
-                                                        <input type="" class="form-control" name="p_nombre"
-                                                            value="{{p.data.2}}">
-                                                        <label class="col-form-label">Segundo nombre</label>
-                                                        <input type="" class="form-control" name="s_nombre"
-                                                            value="{{p.data.3}}">
-                                                        <label class="col-form-label">Apellido Paterno</label>
-                                                        <input type="" class="form-control" name="p_apellido"
-                                                            value="{{p.data.4}}">
-                                                        <label class="col-form-label">Aplledo Materno</label>
-                                                        <input type="" class="form-control" name="s_apellido"
-                                                            value="{{p.data.5}}">
-                                                    </div>
-
-
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Email</label>
-                                                        <input type="" class="form-control" name="email"
-                                                            value="{{p.data.6}}">
-                                                    </div>
-
-
-                                                    <div class="mb-3">
-                                                        <label class="col-form-label">Cargo</label>
-                                                        <select name="cargo" id="">
-
-                                                            <option value="{{p.data.7}}">Seleccionar</option>
-                                                            {% for c in cargo %}
-                                                            <!-- <input type="" class="form-control" name="cargo"> -->
-                                                            <option value="{{c.0}}">{{c.1}}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </div>
-
-
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Sucursal</label>
-                                                        <select name="sucursal" id="">
-                                                            <option value="{{p.data.8}}">Seleccionar</option>
-                                                            {% for c in sucursal %}
-                                                            <option value="{{c.0}}">{{c.1}}</option>
-                                                            <!-- <input type="" class="form-control" name="sucursal"> -->
-                                                            {% endfor %}
-                                                    </div>
-
-
-
-
-                                                    <br>
-
-                                                    <div class="mb-3">
-                                                        <label for="formFile" class="form-label"></label>
-                                                        <input class="form-control" type="file" name="imagen"
-                                                            value="{{p.imagen}}">
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <input type="hidden" name="accion" value="modificar">
-                                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                                    </div>
-                                                    <!-- </form> -->
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-<!-- Fin del Modal modificar -->
-
-                                </td>
-                            </form>
-                            <td>
-                                {% if p.imagen %}
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                    data-target="#miModal{{ forloop.counter }}">
-                                    Ver</button>
-                                <div class="modal fade" id="miModal{{ forloop.counter }}" tabindex="-1" role="dialog"
-                                    aria-labelledby="miModalLabel{{ forloop.counter }}" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="miModalLabel{{ forloop.counter }}">
-                                                    {{ p.data.0 }}-{{ p.data.1 }}
-                                                </h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <!-- Contenido del modal Imagen -->
-                                                <img src="data:image/jpeg;base64,{{ p.imagen }}" alt="Imagen"
-                                                    class="img-fluid">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <!-- <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Cerrar</button> -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </tbody>
-                    {% endfor %}
-                </table>
-<!-- Fin de tabla Empleados -->
-            </div>
-        </div>
-
-
-
-
-
-<!-- Modal formulario ingresar Empleado-->
-        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Ingresar empleado</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST" enctype="multipart/form-data" action="">
-                            {% csrf_token %}
-
-                            <div class="mb-3">
-
-                                <label class="form-label">Rut</label>
-                                <input type="" class="form-control" name="rut">
-                                <label class="form-label">Verificador</label>
-                                <input type="" class="form-control" name="dv">
-
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="col-form-label">Primer nombre</label>
-                                <input type="" class="form-control" name="p_nombre">
-                                <label class="col-form-label">Segundo nombre</label>
-                                <input type="" class="form-control" name="s_nombre">
-                                <label class="col-form-label">Apellido Paterno</label>
-                                <input type="" class="form-control" name="p_apellido">
-                                <label class="col-form-label">Aplledo Materno</label>
-                                <input type="" class="form-control" name="s_apellido">
-                            </div>
-
-
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="" class="form-control" name="email">
-                            </div>
-
-
-                            <div class="mb-3">
-                                <label class="col-form-label">Cargo</label>
-                                <select name="cargo" id="">
-
-                                    <option value="">Seleccionar</option>
-                                    {% for c in cargo %}
-                                    <!-- <input type="" class="form-control" name="cargo"> -->
-                                    <option value="{{c.0}}">{{c.1}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-
-                            <div class="mb-3">
-                                <label class="form-label">Sucursal</label>
-                                <select name="sucursal" id="">
-                                    <option value="">Seleccionar</option>
-                                    {% for c in sucursal %}
-                                    <option value="{{c.0}}">{{c.1}}</option>
-
-                                    {% endfor %}
-                            </div>
-
-                            <br>
-
-                            <div class="mb-3">
-                                <label for="formFile" class="form-label"></label>
-                                <input class="form-control" type="file" name="imagen">
-
-                            </div>
-
-                    </div>
-                    <div class="modal-footer">
-
-                        <input type="hidden" name="accion" value="nuevo">
-
-                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                        <button type="submit" class="btn btn-primary">Submit</button>
-
-
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-<!-- Fin Modal formulario ingresar Empleado-->
+      </div>
     </div>
+  </div>
 </div>
+
 {% endblock %}

@@ -24,3 +24,12 @@
     width: 100px;
     height: 45px;
 }
+
+.invisible-link {
+  color: transparent;
+  text-decoration: none;
+  cursor: pointer;
+}
+.link {
+  color:blue
+}

@@ -1,6 +1,17 @@
-.password-field input[type="password"].show-password {
-    -webkit-text-security: none; /* Mostrar el texto */
-    -moz-text-security: none;
-    -ms-text-security: none;
-    text-security: none;
-  }
+.hidden {
+  display: none;
+}
+
+.password-container {
+  display: flex;
+  align-items: center;
+}
+
+.password {
+  flex-grow: 1;
+  margin-right: 10px; /* Espacio entre el texto y el botón */
+}
+
+.btn-show {
+  white-space: nowrap; /* Evita que el botón se envuelva en varias líneas */
+}

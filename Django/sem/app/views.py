@@ -206,16 +206,62 @@ def listar_reporte():
 
     return lista
 
+
+
+
+
 @login_required(login_url='/accounts/login')
 def insumo(request):
     data_insumos = SP_LISTAR_INSUMO()
 
     data = {
-         'insumos': data_insumos
+         'insumos': data_insumos,
+         'sucursal': listado_sucursal()
      }
+    if request.method == 'POST':
+        accion = request.POST.get('accion')
 
-    
+        if accion == 'nuevo':
+            insumo = request.POST.get('insumo')
+            stock = request.POST.get('stock')
+            color = request.POST.get('color')
+            sucursal = request.POST.get('sucursal')
+            
+            salida = SP_AGREGAR_INSUMO(insumo,stock,color,sucursal)
+            if salida == 1:
+                messages.success(request, 'Ingreso exitoso de insumo')
+                return redirect('insumo')
+            else:
+                messages.warning(request, 'Ingreso FALLIDO de insumo')
+            
+            
+        elif accion == 'modificar':
+            id_insumo = request.POST.get('id_insumo')
+            insumo = request.POST.get('insumo')
+            stock = request.POST.get('stock')
+            color = request.POST.get('color')
+            sucursal = request.POST.get('sucursal')
+
+            salida = SP_MODIFICAR_INSUMO(id_insumo,insumo,stock,color,sucursal)
+            if salida == 1:
+                messages.success(request, 'Modificacion exitosa de insumo')
+                return redirect('insumo')
+            else:
+                messages.warning(request, 'Modificacion FALLIDA de insumo')
+            
         
+        elif accion == 'add':
+            id_insumo = request.POST.get('id_insumo')
+            addstock = request.POST.get('addstock')
+
+            salida = SP_MODIFICAR_INSUMO_SUMAR(id_insumo,addstock)
+            if salida == 1:
+                messages.success(request, 'Modificacion exitosa de Stock')
+                return redirect('insumo')
+            else:
+                messages.warning(request, 'Modificacion FALLIDA de Stock')
+            
+
     return render(request, 'app/insumo.html',data)
 
 
@@ -228,6 +274,30 @@ def SP_LISTAR_INSUMO():
     for fila in out_cur:
         lista.append(fila)
     return lista
+
+
+def SP_AGREGAR_INSUMO(insumo,stock,color,sucursal):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_AGREGAR_INSUMO", [insumo,stock,color,sucursal,salida])
+    return salida.getvalue()
+
+
+def SP_MODIFICAR_INSUMO(id_insumo,insumo,stock,color,sucursal):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_MODIFICAR_INSUMO", [id_insumo,insumo,stock,color,sucursal,salida])
+    return salida.getvalue()
+
+
+def SP_MODIFICAR_INSUMO_SUMAR(id_insumo,addstock):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_MODIFICAR_INSUMO_SUMAR", [id_insumo,addstock,salida])
+    return salida.getvalue()
 
 
 
@@ -343,11 +413,16 @@ def empleado(request):
                 image.save(image_buffer, format='JPEG')
                 image_data = image_buffer.getvalue()
                 salida = SP_AGREGAR_EMPLEADO(rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
+                print(salida, 'salida')
+                messages.success(request, '¡El mensaje se muestra correctamente!')
                 return redirect('empleado')
             else:
                 image_data = None
                 salida = SP_AGREGAR_EMPLEADO(rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
+                print(salida, 'salida')
+                messages.success(request, '¡El mensaje se muestra correctamente!')
                 return redirect('empleado')
+
             
         elif accion == 'modificar':
             rut = request.POST.get('rut')
@@ -372,14 +447,26 @@ def empleado(request):
                 image_data = image_buffer.getvalue()
 
                 salida = SP_MODIFICAR_EMPLEADO(rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
-                return redirect('empleado')
-            
+                print(salida, 'salida')
+                if salida == 1:
+                    
+                    messages.success(request, 'Modificacion exitosa de empleado')
+                    return redirect('empleado')
+                else:
+                    messages.success(request, 'Error al ingresar datos de empleado')
+                    return redirect('empleado')
+
             else:
                 image_data = None
                 salida = SP_MODIFICAR_EMPLEADO(rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
-                return redirect('empleado')
-
-        
+                print(salida, 'salida')
+                if salida == 1:
+                    
+                    messages.success(request, 'Modificacion exitosa de empleado')
+                    return redirect('empleado')
+                else:
+                    messages.success(request, 'Error al ingresar datos de empleado')
+                    return redirect('empleado')
 
     return render(request, 'app/emp.html', data)
 
@@ -389,8 +476,10 @@ def SP_AGREGAR_EMPLEADO(rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, ema
     salida = cursor.var(cx_Oracle.NUMBER)
     if imagen is not None:
         cursor.callproc("SP_AGREGAR_EMPLEADO_IMG", [rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, imagen, salida])
+        print(salida.getvalue(), 'salida')
     else:
         cursor.callproc("SP_AGREGAR_EMPLEADO", [rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, salida])
+        print(salida.getvalue(), 'salida')
     
     return salida.getvalue()
 
@@ -400,9 +489,9 @@ def SP_MODIFICAR_EMPLEADO(rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, e
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
     if imagen is not None:
-        cursor.callproc("SP_MODIFICAR_EMPLEADO_IMG", [rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, imagen])
+        cursor.callproc("SP_MODIFICAR_EMPLEADO_IMG", [rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, imagen,salida])
     else:
-        cursor.callproc("SP_MODIFICAR_EMPLEADO", [rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal])
+        cursor.callproc("SP_MODIFICAR_EMPLEADO", [rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal,salida])
     return salida.getvalue()
 
 
@@ -431,6 +520,7 @@ def solicitud(request):
         'solicitud': data_solicitud,
         'usuarios' : SP_LISTAR_USUARIO(),
         'sucursal' : listado_sucursal(),
+        'insumos'  : SP_LISTAR_INSUMO(),
     }
     if request.method == 'POST':
         accion = request.POST.get('accion')
@@ -452,6 +542,7 @@ def solicitud(request):
             return redirect('solicitud')
 
     return render(request, 'app/solicitud.html', data)
+
 
 def SP_MODIFICAR_SOLICITUD_ESTADO(ID_SOLICITUD,ESTADO_S_ID_ESTADO_SOLICITUD):
     django_cursor = connection.cursor()
@@ -603,7 +694,10 @@ def prueba(request):
             image.thumbnail(max_size)
 
             image_buffer = BytesIO()
-            image.save(image_buffer, format='JPEG')
+            image.save(image_buffer, format='JPEG,PNG')
+            image_buffer.seek(0)
+
+            #image_data = base64.b64encode(image_buffer.read())')
             image_data = image_buffer.getvalue()
 
             salida = SP_AGREGAR_REPORTE(
@@ -631,86 +725,10 @@ def prueba(request):
 
 @login_required(login_url='/accounts/login')
 def prueba_emp(request):
-    datos_empleado = sp_listar_empleado()
-
-    arreglo = []
-
-    for i in datos_empleado:
-        imagen = i[9]
-        if imagen is not None:
-            imagen_base64 = str(base64.b64encode(imagen.read()), 'utf-8')
-        else:
-            imagen_base64 = None
-
-        data = {
-            'data': i,
-            'imagen': imagen_base64
-        }
-        arreglo.append(data)
-
-    data = {
-        'empleado': arreglo,
-        'cargo': listado_cargo(),
-        'sucursal': listado_sucursal()
-    }
+    
 
 
-    if request.method == 'POST':
-        accion = request.POST.get('accion')
-
-        if accion == 'nuevo':
-            rut = request.POST.get('rut')
-            dv = request.POST.get('dv')
-            p_nombre = request.POST.get('p_nombre')
-            s_nombre = request.POST.get('s_nombre')
-            p_apellido = request.POST.get('p_apellido')
-            s_apellido = request.POST.get('s_apellido')
-            email = request.POST.get('email')
-            cargo = request.POST.get('cargo')
-            sucursal = request.POST.get('sucursal')
-            imagen = request.FILES['imagen']
-
-            image = Image.open(imagen)
-            max_size = (500, 500)
-            image.thumbnail(max_size)
-
-            image_buffer = BytesIO()
-            image.save(image_buffer, format='JPEG')
-            image_data = image_buffer.getvalue()
-
-            salida = agregar_empleado(
-                rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
-            return redirect('prueba_emp')
-            
-        elif accion == 'modificar':
-            rut = request.POST.get('rut')
-            dv = request.POST.get('dv')
-            p_nombre = request.POST.get('p_nombre')
-            s_nombre = request.POST.get('s_nombre')
-            p_apellido = request.POST.get('p_apellido')
-            s_apellido = request.POST.get('s_apellido')
-            email = request.POST.get('email')
-            cargo = request.POST.get('cargo')
-            sucursal = request.POST.get('sucursal')
-            imagen = request.FILES['imagen']
-
-             # Redimensionar imagen
-            image = Image.open(imagen)
-            max_size = (500, 500)
-            image.thumbnail(max_size)
-
-            image_buffer = BytesIO()
-            image.save(image_buffer, format='JPEG')
-            image_data = image_buffer.getvalue()
-
-
-            salida = SP_MODIFICAR_EMPLEADO(
-                rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
-            return redirect('prueba_emp')
-
-
-
-    return render(request, 'app/prueba_emp.html', data)
+    return render(request, 'app/prueba_emp.html')
 
 
 

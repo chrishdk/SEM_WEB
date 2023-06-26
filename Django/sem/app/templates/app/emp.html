@@ -1,7 +1,8 @@
 {% extends 'app/base2.html' %} {% load static %}
 
 <!-- integracion de js personalizado -->
-{% block js %} {% endblock %}
+{% block js %} 
+{% endblock %}
 
 <!-- integracion de css personalizado -->
 {% block css %}
@@ -9,6 +10,13 @@
 {% endblock %} {% block contenido %}
 <!-- Page Heading -->
 <div class="container-fluid">
+    {% if messages %}
+<div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x" role="alert">
+  {% for message in messages %}
+  {{ message }}
+  {% endfor %}
+</div>
+{% endif %}
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Empleados</h1>
@@ -104,16 +112,16 @@
 
                                                     <div class="mb-3">
                                                         <label class="col-form-label">Primer nombre</label>
-                                                        <input type="" class="form-control" name="p_nombre"
+                                                        <input type="" class="form-control" required name="p_nombre"
                                                             value="{{p.data.2}}">
                                                         <label class="col-form-label">Segundo nombre</label>
-                                                        <input type="" class="form-control" name="s_nombre"
+                                                        <input type="" class="form-control" required name="s_nombre"
                                                             value="{{p.data.3}}">
                                                         <label class="col-form-label">Apellido Paterno</label>
-                                                        <input type="" class="form-control" name="p_apellido"
+                                                        <input type="" class="form-control" required name="p_apellido"
                                                             value="{{p.data.4}}">
                                                         <label class="col-form-label">Aplledo Materno</label>
-                                                        <input type="" class="form-control" name="s_apellido"
+                                                        <input type="" class="form-control" required name="s_apellido"
                                                             value="{{p.data.5}}">
                                                     </div>
 
@@ -127,7 +135,7 @@
 
                                                     <div class="mb-3">
                                                         <label class="col-form-label">Cargo</label>
-                                                        <select name="cargo" id="">
+                                                        <select class="form-control" name="cargo" id="">
 
                                                             <option value="{{p.data.7}}">Seleccionar</option>
                                                             {% for c in cargo %}
@@ -140,31 +148,29 @@
 
                                                     <div class="mb-3">
                                                         <label class="form-label">Sucursal</label>
-                                                        <select name="sucursal" id="">
+                                                        <select class="form-control" name="sucursal" id="">
                                                             <option value="{{p.data.8}}">Seleccionar</option>
                                                             {% for c in sucursal %}
                                                             <option value="{{c.0}}">{{c.1}}</option>
-                                                            <!-- <input type="" class="form-control" name="sucursal"> -->
+
                                                             {% endfor %}
                                                     </div>
 
 
-
-
-                                                    <br>
-
                                                     <div class="mb-3">
-                                                        <label for="formFile" class="form-label"></label>
-                                                        <input class="form-control" type="file" name="imagen">
-                        
+                                                        <label for="formFile" class="form-label">Seleccionar imagen JPEG</label>
+                                                        <input class="form-control" type="file" name="imagen" accept="image/jpeg">
                                                     </div>
+
+
                                                     <div class="modal-footer">
                                                         <input type="hidden" name="accion" value="modificar">
                                                         <button type="submit" class="btn btn-primary">Submit</button>
                                                     </div>
-                                                    <!-- </form> -->
+                                                    
 
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
