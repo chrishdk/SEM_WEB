@@ -1,0 +1,40 @@
+/* Empleados */
+.invisible-dash {
+  background-color: #ffffff; /* Reemplaza con el color de fondo deseado */
+  border: none; /* Opcional: elimina el borde si es necesario */
+}
+.small-input-dv {
+  max-width: 80px;
+  width: 50px; /* Ajusta el ancho según tus necesidades */
+}
+.small-input-rut{
+  max-width: 150px;
+}
+
+
+/* usuario */
+
+.hidden {
+  display: none;
+}
+
+.password-container {
+  display: flex;
+  align-items: center;
+}
+
+.password {
+  flex-grow: 1;
+  margin-right: 10px; /* Espacio entre el texto y el botón */
+}
+
+.btn-show {
+  white-space: nowrap; /* Evita que el botón se envuelva en varias líneas */
+}
+
+.td-limite {
+  max-width: 200px; /* Ajusta el tamaño máximo según tus necesidades */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

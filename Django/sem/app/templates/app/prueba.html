@@ -1,311 +1,408 @@
 {% extends 'app/base2.html' %} {% load static %}
 
 <!-- integracion de js personalizado -->
-{% block js %} {% endblock %}
+{% block js %} 
+{% endblock %}
 
 <!-- integracion de css personalizado -->
-{% block css %} {% endblock %} {% block contenido %}
+{% block css %}
+<link href="{% static 'app/css/logo.css' %}" rel="stylesheet" />
+{% endblock %} {% block contenido %}
 <!-- Page Heading -->
 <div class="container-fluid">
+    {% if messages %}
+    <div class="alert alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x" role="alert">
+      {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Empleados</h1>
+
+        <!-- Boton modal ingresar empleado -->
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#staticBackdrop">
+            Ingresar Empleado
+        </button>
+        <!-- Fin Boton modal ingresar empleado -->
+        
+    </div>
 
 
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-<h1 class="h3 mb-2 text-gray-800">Reportes</h1>
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#staticBackdrop">
-  Ingresar Reporte
-</button>
-</div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Tabla de empleados</h6>
+        </div>
 
 
-<!-- DataTales Example -->
-<div class="card shadow mb-4">
-  <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Tabla de Reportes</h6>
-  </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+<!-- Inicio Tabla Empleados -->
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Rut</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Correo</th>
+                            <th>Cargo</th>
+                            
+                            <th>Sucursal</th>
+                            <th>Opcion</th>
+                            <th>Imagen</th>
+
+                        </tr>
+                    </thead>
+
+                    {% for p in empleado %}
+                    <tbody>
+
+                        <tr>
+                            <td>{{ p.data.0 }}-{{ p.data.1 }}</td>
+                            <td>{{ p.data.2 }} {{ p.data.3 }}</td>
+                            <td>{{ p.data.4 }} {{ p.data.5 }}</td>
+                            <td>{{ p.data.6 }}</td>
+                            <td>{{ p.data.7 | title }}</td>
+                            <td>{{ p.data.8 | title }}</td>
+                            
+                            <form action="" method="post" enctype="multipart/form-data">
+                                <td>
+<!-- Inicio del Boton Modal modificar -->
+                                    <button type="button"  data-toggle="modal" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"
+                                        data-target="#Modificar{{ forloop.counter }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                          </svg>
+                                        
+                                    </button>
+<!-- Fin del Boton Modal modificar -->
+
+<!-- Inicio del Modal modificar -->
+                                    <div class="modal fade" id="Modificar{{ forloop.counter }}" data-backdrop="static"
+                                        data-keyboard="false" tabindex="-1"
+                                        aria-labelledby="ModificarLabel{{ forloop.counter }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="ModificarLabel{{ forloop.counter }}">
+                                                        Modificar {{p.data.0}}-{{p.data.1}}</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+
+                                                    {% csrf_token %}
 
 
-  <div class="card-body">
-    <div class="table-responsive">
+                                                    <div class="mb-3">
+
+                                                        <label class="form-label">Rut</label>
+                                                        <input type="text" readonly class="form-control " name="rut"
+                                                            value="{{p.data.0}}">
+                                                        <label class="form-label">Verificador</label>
+                                                        <input type="text" readonly class="form-control" name="dv"
+                                                            value="{{p.data.1}}">
+
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="col-form-label">Primer nombre</label>
+                                                        <input type="" class="form-control" required name="p_nombre"
+                                                            value="{{p.data.2}}">
+                                                        <label class="col-form-label">Segundo nombre</label>
+                                                        <input type="" class="form-control" required name="s_nombre"
+                                                            value="{{p.data.3}}">
+                                                        <label class="col-form-label">Apellido Paterno</label>
+                                                        <input type="" class="form-control" required name="p_apellido"
+                                                            value="{{p.data.4}}">
+                                                        <label class="col-form-label">Aplledo Materno</label>
+                                                        <input type="" class="form-control" required name="s_apellido"
+                                                            value="{{p.data.5}}">
+                                                    </div>
 
 
-      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Titutlo</th>
-            <th>Descripcion</th>
-            <th>Fecha ingreso</th>
-            <th>Ingresado</th>
-            <th>Prioridad</th>
-            <th>Piso</th>
-            <th>sector</th>
-            <th>estado</th>
-            <th>Asignado</th>
-            <th>Imagen</th>
-            <th>Accion</th>
-          </tr>
-        </thead>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Email</label>
+                                                        <input type="" class="form-control" name="email"
+                                                            value="{{p.data.6}}">
+                                                    </div>
 
-        <tbody>
-          {% for p in reporte %}
-          <tr>
-            <td>{{ p.data.0 | title }}</td>
-            <td>{{ p.data.1 | title }}</td>
-            <td>{{ p.data.2 | title }}</td>
-            <td>{{ p.data.3 | title }}</td>
-            <td>{{ p.data.4 | title }}</td>
-            <td>{{ p.data.5 | title }}</td>
-            <td>{{ p.data.6 | title }}</td>
-            <td>{{ p.data.7 | title }}</td>
-            <td>{{ p.data.8 | title }}</td>
-            <td>{{ p.data.11 | title }}</td>
-            <td>
-              {% if p.imagen %}
-              <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                data-target="#miModal{{ forloop.counter }}">
-                Ver</button>
-              <div class="modal fade" id="miModal{{ forloop.counter }}" tabindex="-1" role="dialog"
-                aria-labelledby="miModalLabel{{ forloop.counter }}" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
+
+                                                    <div class="mb-3">
+                                                        <label class="col-form-label">Cargo</label>
+                                                        <select class="form-control" name="cargo" id="">
+
+                                                            <option value="{{p.data.7}}">Seleccionar</option>
+                                                            {% for c in cargo %}
+                                                            <!-- <input type="" class="form-control" name="cargo"> -->
+                                                            <option value="{{c.0}}">{{c.1}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Sucursal</label>
+                                                        <select class="form-control" name="sucursal" id="">
+                                                            <option value="{{p.data.8}}">Seleccionar</option>
+                                                            {% for c in sucursal %}
+                                                            <option value="{{c.0}}">{{c.1}}</option>
+
+                                                            {% endfor %}
+                                                    </div>
+
+
+                                                    <div class="mb-3">
+                                                        <label for="formFile" class="form-label">Seleccionar imagen JPEG</label>
+                                                        <input class="form-control" type="file" name="imagen" accept="image/jpeg">
+                                                    </div>
+
+
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="accion" value="modificar">
+                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                    </div>
+                                                    
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+<!-- Fin del Modal modificar -->
+
+                                </td>
+                            </form>
+                            <td>
+                                {% if p.imagen %}
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#miModal{{ forloop.counter }}">
+                                    Ver</button>
+                                <div class="modal fade" id="miModal{{ forloop.counter }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="miModalLabel{{ forloop.counter }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="miModalLabel{{ forloop.counter }}">
+                                                    {{ p.data.0 }}-{{ p.data.1 }}
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Contenido del modal Imagen -->
+                                                <img src="data:image/jpeg;base64,{{ p.imagen }}" alt="Imagen"
+                                                    class="img-fluid">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <!-- <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Cerrar</button> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+<!-- Fin de tabla Empleados -->
+            </div>
+        </div>
+
+
+
+
+
+<!-- Modal formulario ingresar Empleado-->
+        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="miModalLabel{{ forloop.counter }}">{{ p.data.0 }}-{{ p.data.1 }}
-                      </h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
+                        <h5 class="modal-title" id="staticBackdropLabel">Ingresar empleado</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
-                      <!-- Contenido del modal -->
-                      <img src="data:image/jpeg;base64,{{ p.imagen }}" alt="Imagen" class="img-fluid">
+
+                      <form>
+                        <div class="form-row">
+                          <div class="col-md-6 mb-3">
+                            <label for="validationServer01">First name</label>
+                            <input type="text" class="form-control is-valid" id="validationServer01" value="Mark" required>
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="validationServer02">Last name</label>
+                            <input type="text" class="form-control" id="validationServer02" value="Otto" required>
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="col-md-6 mb-3">
+                            <label for="validationServer03">City</label>
+                            <input type="text" class="form-control is-invalid" id="validationServer03" aria-describedby="validationServer03Feedback" required>
+                            <div id="validationServer03Feedback" class="invalid-feedback">
+                              Please provide a valid city.
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-3">
+                            <label for="validationServer04">State</label>
+                            <select class="custom-select is-invalid" id="validationServer04" aria-describedby="validationServer04Feedback" required>
+                              <option selected disabled value="">Choose...</option>
+                              <option>...</option>
+                            </select>
+                            <div id="validationServer04Feedback" class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-3">
+                            <label for="validationServer05">Zip</label>
+                            <input type="text" class="form-control is-invalid" id="validationServer05" aria-describedby="validationServer05Feedback" required>
+                            <div id="validationServer05Feedback" class="invalid-feedback">
+                              Please provide a valid zip.
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="form-check">
+                            <input class="form-check-input is-invalid" type="checkbox" value="" id="invalidCheck3" aria-describedby="invalidCheck3Feedback" required>
+                            <label class="form-check-label" for="invalidCheck3">
+                              Agree to terms and conditions
+                            </label>
+                            <div  id="invalidCheck3Feedback" class="invalid-feedback">
+                              You must agree before submitting.
+                            </div>
+                          </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Submit form</button>
+                      </form>
+
+                        <form method="POST" enctype="multipart/form-data" action="">
+                            {% csrf_token %}
+
+                            <style>
+                                .invisible-dash {
+                                    background-color: #ffffff; /* Reemplaza con el color de fondo deseado */
+                                    border: none; /* Opcional: elimina el borde si es necesario */
+                                }
+                                .small-input-dv {
+                                    max-width: 80px;
+                                    width: 50px; /* Ajusta el ancho según tus necesidades */
+                                }
+                                .small-input-rut{
+                                    max-width: 150px;
+                                }
+                              </style>
+                              
+
+
+                              <p class="text-danger"> * : Campos obligatorios</p>
+                              
+                              <div class="mb-3">
+                                <label class="form-label">Rut <span class="text-danger">*</span></label>
+                                  <div class="input-group">
+                                    <input type="text" required pattern="[0-9]{7,8}" minlength="7" maxlength="8" inputmode="numeric" class="form-control small-input-rut " name="rut" placeholder="Ej. 12345678" title="Ingrese un RUT válido sin guion, sin punto">
+                                    <span class="input-group-text invisible-dash">-</span>
+                                    <!-- <label class="form-label">Digito verificador</label> -->
+                                    <input type="text" required pattern="[0-9kK]" minlength="1" maxlength="1" class="form-control small-input-dv" name="dv" placeholder="Ej. K" title="Ingrese un valor válido (0-9, k o K)">
+                                  </div>                           
+
+
+                            </div>
+                              
+                              
+                        
+
+
+                            <div class="mb-3">
+                                <label class="col-form-label">Primer nombre <span class="text-danger">*</span></label>
+                                <input type="text" required minlength="2" maxlength="30" class="form-control" name="p_nombre">
+
+                                <label class="col-form-label">Segundo nombre <span class="text-danger">*</span></label>
+                                <input type="text" required minlength="2" maxlength="30" class="form-control" name="s_nombre">
+
+                                <label class="col-form-label">Apellido Paterno <span class="text-danger">*</span></label>
+                                <input type="text"required minlength="2" maxlength="30" class="form-control" name="p_apellido">
+
+                                <label class="col-form-label">Aplledo Materno <span class="text-danger">*</span></label>
+                                <input type="text" required minlength="2" maxlength="30" class="form-control" name="s_apellido">
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="" class="form-control" name="email">
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label class="col-form-label">Cargo <span class="text-danger">*</span></label>
+                                <select class="form-control" name="cargo" id="">
+
+                                    <option value="">Seleccionar</option>
+                                    {% for c in cargo %}
+                                    <!-- <input type="" class="form-control" name="cargo"> -->
+                                    <option value="{{c.0}}">{{c.1}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label class="form-label">Sucursal <span class="text-danger">*</span></label>
+                                <select class="form-control" name="sucursal" id="">
+                                    <option value="">Seleccionar</option>
+                                    {% for c in sucursal %}
+                                    <option value="{{c.0}}">{{c.1}}</option>
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <!-- <label for="formFile" class="form-label"></label>
+                                <input class="form-control" type="file" name="imagen"> -->
+                                <label class="form-label">Foto de empleado (Opcional)</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input"  name="imagen"  required>
+                                    <label class="custom-file-label">Seleccionar archivo...</label>
+                                  </div>
+
+                            </div>
+
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+                        <input type="hidden" name="accion" value="nuevo">
+
+                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                        <button type="submit" class="btn btn-primary">Ingresar</button>
+
+
+                        </form>
                     </div>
-                  </div>
                 </div>
-              </div>
-              {% endif %}
-            </td>
-            <td>
-
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AsignarReporte{{ forloop.counter }}">
-                Asignar
-              </button>
-<!-- inicio del modal asignar reporte -->
-<div class="modal fade" id="AsignarReporte{{ forloop.counter }}" data-backdrop="static" data-keyboard="false" tabindex="-1"
-aria-labelledby="AsignarReporteLabel{{ forloop.counter }}" aria-hidden="true">
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="AsignarReporteLabel{{ forloop.counter }}">Asignar</h5>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    <div class="mb-3">
-        <label class="form-label">Id</label>
-        <input type="" class="form-control" name="id_reporte" value="{{ p.data.0 | title }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Titulo</label>
-        <input type="" class="form-control"  name="titulo" value="{{ p.data.1 | title }}">
-    </div>
-
-      <div class="mb-3">
-        <label class="col-form-label">Descripcion</label>
-        <input type="" class="form-control" name="descripcion" value="{{ p.data.2 | title }}">
-
-
-</div>
-<div class="mb-3">
-        <label class="col-form-label">Fecha Ingreso</label>
-        <input type="" class="form-control" name="fecha_ingreso" value="{{ p.data.3 | title }}">
-
-
-</div>
-<div class="mb-3">
-        <label class="col-form-label">Ingresado</label>
-        <input type="" class="form-control" name="usuario_usuario" value="{{ p.data.4 | title }}">
-
-
-</div>
-<div class="mb-3">
-        <label class="col-form-label">Prioridad</label>
-        <input type="" class="form-control"  name="prioridad_id_prioridad" value="{{ p.data.5 | title }}">
-      </div>
-
-
-      <div class="mb-3">
-        <label class="form-label">Piso</label>
-        <input type="" class="form-control" name="piso_id_piso" value="{{ p.data.6 | title }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Sector</label>
-        <input type="" class="form-control" name="sector_id_sector" value="{{ p.data.7 | title }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Estado</label>
-        <input type="" class="form-control" name="estado_r_id_estado" value="{{ p.data.8 | title }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Sucursal</label>
-        <input type="" class="form-control" name="sucursal_id_sucursal" value="{{ p.data.9 | title }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Asignado</label>
-        <input type="" class="form-control" name="asignado" value="{{ p.data.11 | title }}">
-      </div>
-
-      <div class="mb-3">
-        <label for="formFile" class="form-label"></label>
-        <input class="form-control" type="file" name="imagen">
-        
-      </div>
-
-
-      <input type="hidden" name="accion" value="asignar">
-      <button type="submit" class="btn btn-primary">Submit</button>
-
-
-
-
-</form>
-
-
-
-    </div>
-  </div>
-</div>
-</div>
-
-
-<!-- Fin del modal asignar reporte -->
-
-
-
-            </td>
-          </tr>
-          {% endfor %}
-
-          <!-- Vertically centered modal -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-
-  <!-- Inicio del modal ingresar reporte -->
-  <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Ingresar empleado</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+            </div>
         </div>
-        <div class="modal-body">
-          <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        <div class="mb-3">
-            <label class="form-label">Id</label>
-            <input type="" class="form-control" name="id_reporte">
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Titulo</label>
-            <input type="" class="form-control"  name="titulo">
-        </div>
-
-          <div class="mb-3">
-            <label class="col-form-label">Descripcion</label>
-            <input type="" class="form-control" name="descripcion">
-
-
-</div>
-<div class="mb-3">
-            <label class="col-form-label">Fecha Ingreso</label>
-            <input type="" class="form-control" name="fecha_ingreso">
-
-
-</div>
-<div class="mb-3">
-            <label class="col-form-label">Ingresado</label>
-            <input type="" class="form-control" name="usuario_usuario">
-
-
-</div>
-<div class="mb-3">
-            <label class="col-form-label">Prioridad</label>
-            <input type="" class="form-control"  name="prioridad_id_prioridad">
-          </div>
-
-
-          <div class="mb-3">
-            <label class="form-label">Piso</label>
-            <input type="" class="form-control" name="piso_id_piso">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Sector</label>
-            <input type="" class="form-control" name="sector_id_sector">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Estado</label>
-            <input type="" class="form-control" name="estado_r_id_estado">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Sucursal</label>
-            <input type="" class="form-control" name="sucursal_id_sucursal">
-          </div>
-
-          <div class="mb-3">
-            <label for="formFile" class="form-label"></label>
-            <input class="form-control" type="file" name="imagen">
-            
-          </div>
-
-          <!-- <div class="mb-3">
-            <label class="form-label">Asignado</label>
-            <input type="" class="form-control" name="asignado">
-          </div> -->
-          <input type="hidden" name="accion" value="nuevo">
-          <button type="submit" class="btn btn-primary">Submit</button>
-
-
-
-
-    </form>
-
-
-
-        </div>
-      </div>
+<!-- Fin Modal formulario ingresar Empleado-->
     </div>
-  </div>
-
-
-
-
-
-
-
-
-
-</div>
 </div>
 {% endblock %}
