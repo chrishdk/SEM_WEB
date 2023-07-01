@@ -1,19 +1,28 @@
 {% extends 'app/base2.html' %} {% load static %}
 
 <!-- integracion de js personalizado -->
-{% block js %} {% endblock %}
+{% block js %}
+<script src="{% static 'app/js/datatables.traduccion.js' %}"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'app/js/datatables/dataTables.bootstrap4.min.js' %}"></script>
+{% endblock %}
 
 <!-- integracion de css personalizado -->
-{% block css %} {% endblock %} {% block contenido %}
+{% block css %}
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css"> -->
+<link href="{% static 'app/css/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block contenido %}
 <div class="container-fluid">
   <!-- Page Heading -->
 
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Reportes</h1>
-        <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Reportes</h1>
+    <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
-    </div>
+  </div>
 
   <!-- Content Row -->
   <div class="row">
@@ -87,8 +96,8 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                Reportes (Dia) </div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                Solicitudes (Dia) </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ solicitud_dia }}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -105,8 +114,8 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                Reportes (Mes) </div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                Solicitudes (Mes) </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ solicitud_mes }}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -124,13 +133,55 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                Reportes sin asignacion</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                Solicitudes pendientes</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ solicitud_pendientes }}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-comments fa-2x text-gray-300"></i>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Insumos escasos</h1>
+
+  </div>
+
+
+  <div class="row">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Insumos escasos</h6>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>ID Insumo</th>
+                <th>Insumo</th>
+                <th>Stock</th>
+                <th>Color</th>
+                <th>ID Sucursal</th>
+              </tr>
+            </thead>
+            <tbody id="tablaInsumos">
+              {% for ins in insumos_bajos %}
+              <tr>
+                <td>{{ ins.0 }}</td>
+                <td>{{ ins.1 }}</td>
+                <td>{{ ins.2 }}</td>
+                <td>{{ ins.3 }}</td>
+                <td>{{ ins.4 }}</td>
+
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -141,5 +192,20 @@
 
 
 
-  </div>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
 {% endblock %}

@@ -1,19 +1,18 @@
-{% extends 'app/base2.html' %}
-
-
-
-
-
-    {% load static %}
+{% extends 'app/base2.html' %} {% load static %}
 
     <!-- integracion de js personalizado -->
 {% block js %}
+<script src="{% static 'app/js/datatables.traduccion.js' %}"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'app/js/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
 <script src="{% static 'app/js/usuario.js' %}"></script>
 {% endblock %}
 
     <!-- integracion de css personalizado -->
 {% block css %}
 <link src="{% static 'app/css/all.css' %}" rel="stylesheet" />
+<link href="{% static 'app/css/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
 {% endblock %}
 
 {% block contenido %}
@@ -54,7 +53,7 @@
                                     <tbody>
                                         {% for p in usuarios %}
                                         <tr>
-                                            <td>{{ p.0 | title }}</td>
+                                            <td>{{ p.0  }}</td>
                                             <td style="white-space: nowrap;">
                                                 <div class="d-flex justify-content-between align-items-center">
                                                   <span class="password hidden" data-password="{{ p.1 }}">**********</span>

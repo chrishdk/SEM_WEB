@@ -1,25 +1,29 @@
 {% extends 'app/base2.html' %} {% load static %}
 
 <!-- integracion de js personalizado -->
-{% block js %} {% endblock %}
+{% block js %}
+<script src="{% static 'app/js/datatables.traduccion.js' %}"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'app/js/datatables/dataTables.bootstrap4.min.js' %}"></script>
+{% endblock %}
 
 <!-- integracion de css personalizado -->
 {% block css %}
+<link href="{% static 'app/css/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
+
 <link href="{% static 'app/css/logo.css' %}" rel="stylesheet" />
 {% endblock %} {% block contenido %}
 <!-- Page Heading -->
 <div class="container-fluid">
-
   {% if messages %}
   <div class="alert alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x" role="alert">
     {% for message in messages %}
-      <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
-        {{ message }}
-      </div>
+    <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+      {{ message }}
+    </div>
     {% endfor %}
   </div>
   {% endif %}
-  
 
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Insumo</h1>
@@ -36,7 +40,7 @@
     <div class="card-body">
       <div class="table-responsive">
         <!-- Inicio Tabla Empleados -->
-        <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
               <th>ID INSUMO</th>
@@ -48,8 +52,9 @@
               <th>Opciones</th>
             </tr>
           </thead>
-          {% for i in insumos %}
+
           <tbody>
+            {% for i in insumos %}
             <tr>
               <td>{{ i.0 }}</td>
               <td>{{ i.1 }}</td>
@@ -58,16 +63,13 @@
               <td>{{ i.5 }}</td>
 
               <td>
-
-
-
                 <form action="" method="post" enctype="multipart/form-data">
                   {% csrf_token %}
                   <div class="input-group">
-
-                    <input type="hidden" name="accion" value="add">
-                    <input type="hidden" name="id_insumo" value="{{ i.0 }}">
-                    <input type="number" name="addstock" class="form-control smaller-input" placeholder="0" style="max-width: 80px;">
+                    <input type="hidden" name="accion" value="add" />
+                    <input type="hidden" name="id_insumo" value="{{ i.0 }}" />
+                    <input type="number" name="addstock" class="form-control smaller-input" placeholder="0"
+                      style="max-width: 80px" />
 
                     <div class="input-group-append">
                       <button type="submit" class="btn btn-success btn-sm shadow-sm square-button"
@@ -80,17 +82,17 @@
                             d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                         </svg>
                       </button>
-
                     </div>
-
                   </div>
                 </form>
               </td>
 
-              <td><button type="button" data-toggle="modal"
+              <td>
+                <button type="button" data-toggle="modal"
                   class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"
-                  data-target="#Modificar{{ forloop.counter }}"><svg xmlns="http://www.w3.org/2000/svg" width="16"
-                    height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                  data-target="#Modificar{{ forloop.counter }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-pencil-square" viewBox="0 0 16 16">
                     <path
                       d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                     <path fill-rule="evenodd"
@@ -103,32 +105,31 @@
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title" id="ModificarLabel{{ forloop.counter }}">
-                          Modificar</h5>
+                          Modificar
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-
-                      <div class="modal-body">
-                        <form method="POST" enctype="multipart/form-data" action="">
+                      <form method="POST" enctype="multipart/form-data" action="">
+                        <div class="modal-body">
                           {% csrf_token %}
 
-                          <input type="hidden" name="id_insumo" value="{{ i.0 }}">
+                          <input type="hidden" name="id_insumo" value="{{ i.0 }}" />
 
                           <div class="mb-3">
                             <label class="form-label">Insumo</label>
-                            <input type="text" class="form-control" value="{{i.1}}" name="insumo">
+                            <input type="text" class="form-control" value="{{i.1}}" name="insumo" />
                           </div>
 
                           <div class="mb-3">
                             <label class="form-label">Stock</label>
-                            <input type="" class="form-control" value="{{i.2}}" name="stock">
+                            <input type="" class="form-control" value="{{i.2}}" name="stock" />
                           </div>
 
                           <div class="mb-3">
                             <label class="form-label">Color</label>
-                            <input type="" class="form-control" value="{{i.3}}" name="color">
-
+                            <input type="" class="form-control" value="{{i.3}}" name="color" />
                           </div>
                           <div class="mb-3">
                             <label class="form-label">Sucursal</label>
@@ -139,34 +140,28 @@
                               {% endfor %}
                             </select>
                           </div>
-
-                      </div>
-                      <div class="modal-footer">
-                        <input type="hidden" name="accion" value="modificar">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-                      </div>
-
+                        </div>
+                        <div class="modal-footer">
+                          <input type="hidden" name="accion" value="modificar" />
+                          <button type="submit" class="btn btn-primary">
+                            Submit
+                          </button>
+                        </div>
+                      </form>
                     </div>
-
                   </div>
                 </div>
 
+                <!-- Fin del Modal modificar -->
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-      <!-- Fin del Modal modificar -->
-      </td>
-      </tr>
-      </tbody>
-      {% endfor %}
-      </table>
     </div>
   </div>
-
-
-
 </div>
-</div>
-
 
 <!-- Modal Ingresar insumos -->
 <div class="modal fade" id="AgregarInsumo" data-backdrop="static" data-keyboard="false" tabindex="-1"
@@ -179,24 +174,23 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form method="POST" enctype="multipart/form-data" action="">
+      <form method="POST" enctype="multipart/form-data" action="">
+        <div class="modal-body">
           {% csrf_token %}
 
           <div class="mb-3">
             <label class="form-label">Insumo</label>
-            <input type="text" required class="form-control" name="insumo">
+            <input type="text" required class="form-control" name="insumo" />
           </div>
 
           <div class="mb-3">
             <label class="form-label">Stock</label>
-            <input type="number" required class="form-control" name="stock">
+            <input type="number" required class="form-control" name="stock" />
           </div>
 
           <div class="mb-3">
             <label class="form-label">Color</label>
-            <input type="text" required class="form-control" name="color">
-
+            <input type="text" class="form-control" name="color" />
           </div>
           <div class="mb-3">
             <label class="form-label">Sucursal</label>
@@ -207,16 +201,15 @@
               {% endfor %}
             </select>
           </div>
-
-
-
-      </div>
-      <div class="modal-footer">
-        <input type="hidden" name="accion" value="nuevo">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary">Enviar</button>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" name="accion" value="nuevo" />
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cerrar
+          </button>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

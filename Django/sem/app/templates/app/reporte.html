@@ -1,11 +1,18 @@
 {% extends 'app/base2.html' %} {% load static %}
 
 <!-- integracion de js personalizado -->
-{% block js %} {% endblock %}
+{% block js %}
+<script src="{% static 'app/js/datatables.traduccion.js' %}"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'app/js/datatables/dataTables.bootstrap4.min.js' %}"></script>
+{% endblock %}
 
 <!-- integracion de css personalizado -->
 {% block css %}
+<link href="{% static 'app/css/logo.css' %}" rel="stylesheet" />
 <link href="{% static 'app/css/all.css' %}" rel="stylesheet" />
+<link href="{% static 'app/css/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
+
 {% endblock %} {% block contenido %}
 <!-- Page Heading -->
 <div class="container-fluid">

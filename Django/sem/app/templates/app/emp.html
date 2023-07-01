@@ -1,13 +1,19 @@
 {% extends 'app/base2.html' %} {% load static %}
 
 <!-- integracion de js personalizado -->
-{% block js %} 
+{% block js %}
+<script src="{% static 'app/js/datatables.traduccion.js' %}"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'app/js/datatables/dataTables.bootstrap4.min.js' %}"></script>
 {% endblock %}
 
 <!-- integracion de css personalizado -->
 {% block css %}
 <link href="{% static 'app/css/logo.css' %}" rel="stylesheet" />
 <link href="{% static 'app/css/all.css' %}" rel="stylesheet" />
+<link href="{% static 'app/css/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
+
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css"> -->
 {% endblock %} {% block contenido %}
 <!-- Page Heading -->
 <div class="container-fluid">
@@ -52,26 +58,26 @@
                             <th>Apellidos</th>
                             <th>Correo</th>
                             <th>Cargo</th>
-                            
                             <th>Sucursal</th>
                             <th>Opcion</th>
                             <th>Imagen</th>
-
                         </tr>
                     </thead>
-
-                    {% for p in empleado %}
-                    <tbody>
-
+                    <tbody id="tablaEmpleado">
+                        {% for p in empleado %}
                         <tr>
+                            <!-- rut - dv-->
                             <td>{{ p.data.0 }}-{{ p.data.1 }}</td>
+                            <!-- p.nombre s.nombre -->
                             <td>{{ p.data.2 }} {{ p.data.3 }}</td>
+                            <!-- p.apellido s.apellido -->
                             <td>{{ p.data.4 }} {{ p.data.5 }}</td>
+                            <!-- correo -->
                             <td>{{ p.data.6 }}</td>
-                            <td>{{ p.data.7 | title }}</td>
-                            <td>{{ p.data.8 | title }}</td>
-                            
-                            
+                            <!-- cargo 7-11 -->
+                            <td>{{ p.data.11 }}</td>
+                            <!-- sucursal 8-13 -->
+                            <td>{{ p.data.13 | title }}</td>
                                 <td>
 <!-- Inicio del Boton Modal modificar -->
                                     <button type="button"  data-toggle="modal" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm"
@@ -97,9 +103,10 @@
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
+                                                <form action="" method="post" enctype="multipart/form-data">
                                                 <div class="modal-body">
 
-                                                    <form action="" method="post" enctype="multipart/form-data">
+                                                    
                                                     {% csrf_token %}
                                                     <p class="text-danger"> * : Campos obligatorios</p>
                                                     <div class="mb-3">
@@ -177,7 +184,7 @@
                                                     <div class="mb-3">
                                                         <label class="form-label">Foto de empleado (Opcional)</label>
                                                         <div class="custom-file">
-                                                            <input type="file" class="custom-file-input"  name="imagen"  required>
+                                                            <input type="file" class="custom-file-input"  name="imagen" >
                                                             <label class="custom-file-label">Seleccionar archivo...</label>
                                                           </div>
                         
@@ -189,7 +196,7 @@
                                                         <button type="submit" class="btn btn-primary">Submit</button>
                                                     </div>
                                                     
-
+                                                </form>
                                                 </div>
 
                                             </div>
@@ -198,7 +205,7 @@
 <!-- Fin del Modal modificar -->
 
                                 </td>
-                            </form>
+
                             <td>
                                 {% if p.imagen %}
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
@@ -232,8 +239,9 @@
                                 {% endif %}
                             </td>
                         </tr>
+                        {% endfor %}
                     </tbody>
-                    {% endfor %}
+                    
                 </table>
 <!-- Fin de tabla Empleados -->
             </div>
@@ -334,10 +342,9 @@
                             <div class="mb-3">
                                 <label class="form-label">Foto de empleado (Opcional)</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input"  name="imagen"  required>
+                                    <input type="file" class="custom-file-input"  name="imagen" >
                                     <label class="custom-file-label">Seleccionar archivo...</label>
                                   </div>
-
                             </div>
 
                     </div>

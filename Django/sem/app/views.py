@@ -8,18 +8,26 @@ from io import BytesIO
 import base64
 from django.contrib import messages
 
+import openpyxl
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font
+from django.http import HttpResponse
+import io
+import json
 
 # Inicio
 @login_required(login_url='/accounts/login')
 def inicio(request):
-    reporte_mes = contar_reportes_mes_actual()
-    reporte_dia = contar_reportes_dia_actual()
-    reporte_no_asignados = contar_reportes_no_asignados()
+
 
     data = {
-        'reporte_mes': reporte_mes,
-        'reporte_dia': reporte_dia,
-        'reporte_no_asignados': reporte_no_asignados,
+        'insumos_bajos': obtener_insumos_con_stock_bajo(),
+        'reporte_mes': contar_reportes_mes_actual(),
+        'reporte_dia': contar_reportes_dia_actual(),
+        'reporte_no_asignados': contar_reportes_no_asignados(),
+        'solicitud_dia': contar_solicitud_dia_actual(),
+        'solicitud_mes': contar_solicitud_mes_actual(),
+        'solicitud_pendientes': contar_solicitud_pendiente(),
     }
 
     return render(request, 'app/index.html', data)
@@ -53,6 +61,64 @@ def contar_reportes_no_asignados():
     cursor.callproc('contar_reportes_no_asignados', [cantidad])
 
     return cantidad.getvalue()
+
+
+def contar_solicitud_dia_actual():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+
+    cantidad = cursor.var(int)
+    cursor.callproc('contar_solicitud_dia_actual', [cantidad])
+
+    return cantidad.getvalue()
+
+
+def contar_solicitud_mes_actual():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+
+    cantidad = cursor.var(int)
+    cursor.callproc('contar_SOLICITUD_mes_actual', [cantidad])
+
+    return cantidad.getvalue()
+
+
+def contar_solicitud_pendiente():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+
+    cantidad = cursor.var(int)
+    cursor.callproc('contar_solicitud_pendiente', [cantidad])
+
+    return cantidad.getvalue()
+
+
+def obtener_insumos_con_stock_bajo():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    # Ejecutar el procedimiento y obtener los resultados
+    cursor.callproc('obtener_insumos_con_stock_bajo', [out_cur])
+    lista =[]
+    for fila in out_cur:
+        lista.append(fila)
+
+    return lista
+
+def sp_listar_empleado():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_LISTAR_EMPLEADO", [out_cur])
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
+
+
+
 
 
 
@@ -105,14 +171,22 @@ def empleado(request):
                 image_data = image_buffer.getvalue()
                 salida = SP_AGREGAR_EMPLEADO(rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
                 print(salida, 'salida')
-                messages.success(request, '¡El mensaje se muestra correctamente!')
-                return redirect('empleado')
+                if salida == 1:
+                    messages.success(request, 'Ingreso exitosa de empleado con imagen')
+                    return redirect('empleado')
+                else:
+                    messages.warning(request, 'Error al ingresar datos de empleado, comprobar existencia')
+                    return redirect('empleado')
             else:
                 image_data = None
                 salida = SP_AGREGAR_EMPLEADO(rut, dv, p_nombre, s_nombre, p_apellido, s_apellido, email, cargo, sucursal, image_data)
                 print(salida, 'salida')
-                messages.warning(request, '¡ERROR!')
-                return redirect('empleado')
+                if salida == 1:
+                    messages.success(request, 'Ingreso exitosa de empleado sin imagen')
+                    return redirect('empleado')
+                else:
+                    messages.warning(request, 'Error al ingresar datos de empleado empleado comprobar existencia')
+                    return redirect('empleado')
 
             
         elif accion == 'modificar':
@@ -605,6 +679,76 @@ def SP_LISTAR_HISTORIAL():
         lista.append(fila)
     return lista
 
+@login_required(login_url='/accounts/login')
+def administracion(request):
+
+    data = {
+        'sucursal': listado_sucursal(),
+        'piso': SP_LISTAR_PISO(),
+        'sector': SP_LISTAR_SECTOR(),
+        'comuna': SP_LISTAR_COMUNA(),
+    }
+
+    if request.method == 'POST':
+        accion = request.POST.get('accion')
+
+        if accion == 'nuevos':
+            sucursal = request.POST.get('sucursal')
+            direccion = request.POST.get('direccion')
+            numero = request.POST.get('numero')
+            comuna = request.POST.get('comuna')
+
+            salida = SP_AGREGAR_SUCURSAL(sucursal,direccion,numero,comuna)
+
+            return redirect('administracion')
+        
+            
+        elif accion == 'nuevopiso':
+            piso = request.POST.get('piso')
+
+            salida = SP_AGREGAR_PISO(piso)
+
+            
+            return redirect('administracion')
+        
+        elif accion == 'nuevosector':
+            sector = request.POST.get('sector')
+
+            salida = SP_AGREGAR_SECTOR(sector)
+            
+
+            return redirect('administracion')
+
+    return render(request, 'app/administracion.html',data)
+
+def SP_AGREGAR_SUCURSAL(sucursal,direccion,numero,comuna):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_AGREGAR_SUCURSAL", [sucursal,direccion,numero,comuna,salida])
+    return salida.getvalue()
+
+def SP_AGREGAR_PISO(piso):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_AGREGAR_PISO", [piso,salida])
+    return salida.getvalue()
+
+def SP_AGREGAR_SECTOR(sector):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc("SP_AGREGAR_SECTOR", [sector,salida])
+    return salida.getvalue()
+
+
+
+
+
+
+
+
 
 
 
@@ -634,7 +778,16 @@ def listado_cargo():
     return lista
 
 
+def SP_LISTAR_COMUNA():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
 
+    cursor.callproc("SP_LISTAR_COMUNA", [out_cur])
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    return lista
 
 
 def SP_LISTAR_PRIORIDAD():
@@ -680,6 +833,48 @@ def SP_LISTAR_ESTADO_R():
     for fila in out_cur:
         lista.append(fila)
     return lista
+
+
+
+def export_to_excel(request):
+    data = json.loads(request.body)["data"]
+
+    # Crea un nuevo libro de trabajo de Excel
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+
+    # Agrega los datos filtrados a las celdas correspondientes en el libro de trabajo
+    for row in data:
+        sheet.append(row)
+
+    # Genera el archivo de Excel en memoria
+    output = io.BytesIO()
+    workbook.save(output)
+    output.seek(0)
+
+    # Configura el encabezado de respuesta para indicar que se va a descargar un archivo de Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=tabla.xlsx'
+
+    # Copia el contenido del archivo de Excel en la respuesta HTTP
+    response.write(output.getvalue())
+
+    return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

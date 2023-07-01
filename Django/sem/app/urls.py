@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import reporte,inicio,empleado,usuarios,solicitud,prueba,prueba_emp,insumo,historial
+from .views import reporte,inicio,empleado,usuarios,solicitud,prueba,prueba_emp,insumo,historial,export_to_excel,administracion
+from django.contrib import admin
 
 urlpatterns = [
     path('', inicio, name="inicio"),
@@ -19,4 +20,6 @@ urlpatterns = [
     # path('modificar_empleado/<rut>/', modemp, name="modemp"),
     path('prueba/', prueba, name="prueba"),
     path('pepe/', prueba_emp, name="prueba_emp"),
+    path('export/', export_to_excel, name='export_to_excel'),
+    path('administracion/', administracion, name="administracion"),
 ]

@@ -1,17 +1,15 @@
-{% extends 'app/base2.html' %}
-
-
-
-
-
-    {% load static %}
+{% extends 'app/base2.html' %} {% load static %}
 
     <!-- integracion de js personalizado -->
 {% block js %}
+    <script src="{% static 'app/js/datatables.traduccion.js' %}"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'app/js/datatables/dataTables.bootstrap4.min.js' %}"></script>
 {% endblock %}
 
     <!-- integracion de css personalizado -->
 {% block css %}
+    <link href="{% static 'app/css/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
 {% endblock %}
 
 {% block contenido %}
@@ -71,6 +69,10 @@
                                                 <td>Aprobado</td>
                                                 {% elif p.3 == 3 %}
                                                 <td>Rechazado</td>
+                                                {% elif p.3 == 4 %}
+                                                <td>Entregado</td>
+                                                {% else %}
+                                                <td></td>
                                                 {% endif %}
 
                                             <td>{{ p.6 }}</td>
@@ -155,13 +157,13 @@
                 <div class="mb-3">
                     insumos
                     <label class="form-label">Solicitud</label>
-                    <!-- <input type="" class="form-control" name="solicitud"> -->
-                    <select class="form-control" name="solicitud" id="">
+                    <input type="" class="form-control" name="solicitud">
+                    <!-- <select class="form-control" name="solicitud" id="">
                         <option value="">Seleccionar</option>
                     {% for i in insumos %}
                         <option value="{{ i.1 }}">{{ i.1 }}</option>
                     {% endfor %}
-                </select>
+                </select> -->
                 </div>
 
 
