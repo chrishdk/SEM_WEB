@@ -14,7 +14,7 @@
 <link href="{% static 'app/css/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
 
 {% endblock %} {% block contenido %}
-<!-- Page Heading -->
+
 <div class="container-fluid">
   {% if messages %}
   <div class="alert alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x" role="alert">
@@ -38,7 +38,6 @@
 
 
 
-<!-- DataTales Example -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
     <h6 class="m-0 font-weight-bold text-primary">Tabla de Reportes</h6>
@@ -203,7 +202,9 @@ aria-labelledby="AsignarReporteLabel{{ forloop.counter }}" aria-hidden="true">
       <div class="mb-3">
         <label class="form-label">Asignado</label>
         <select class="form-control" name="asignado" id="">
+          
           <option value="{{ p.data.11 }}">{{ p.data.11 }}</option>
+          <option value="">vacio</option>
             {% for u in usuarios %}
             <!-- <input type="" class="form-control" name="cargo"> -->
             <option value="{{u.0}}">{{u.0}}</option>
@@ -243,7 +244,7 @@ aria-labelledby="AsignarReporteLabel{{ forloop.counter }}" aria-hidden="true">
           </tr>
           {% endfor %}
 
-          <!-- Vertically centered modal -->
+
         </tbody>
       </table>
     </div>
@@ -271,13 +272,13 @@ aria-labelledby="AsignarReporteLabel{{ forloop.counter }}" aria-hidden="true">
         </div> -->
 
         <div class="mb-3">
-            <label class="form-label">Titulo</label>
-            <input type="" class="form-control"  name="titulo">
+            <label class="form-label">Titulo <span class="text-danger">*</span></label>
+            <input type="" required class="form-control"  name="titulo">
         </div>
 
           <div class="mb-3">
-            <label class="col-form-label">Descripcion</label>
-            <textarea type="text" class="form-control" name="descripcion" rows="3"></textarea>
+            <label class="col-form-label">Descripcion <span class="text-danger">*</span></label>
+            <textarea type="text" required class="form-control" name="descripcion" rows="3"></textarea>
 
 
 </div>
@@ -287,11 +288,25 @@ aria-labelledby="AsignarReporteLabel{{ forloop.counter }}" aria-hidden="true">
 
 
 </div> -->
-<div class="mb-3">
+<!-- <div class="mb-3">
             <label class="col-form-label">Ingresado</label>
             <input type="text" class="form-control" name="usuario_usuario">
 
 
+</div> -->
+
+<div class="mb-3">
+  <label class="form-label">Reportado por <span class="text-danger">*</span></label>
+  <select class="form-control" required name="usuario_usuario" id="">
+    
+
+    <option value="">Seleccionar </option>
+      {% for u in usuarios %}
+      <!-- <input type="" class="form-control" name="cargo"> -->
+      <option value="{{u.0}}">{{u.0}}</option>
+      {% endfor %}
+  </select>
+  <!-- <input type=""  class="form-control" name="asignado" value="{{ p.data.11 }}"> -->
 </div>
 
 <div class="mb-3">
@@ -379,7 +394,7 @@ aria-labelledby="AsignarReporteLabel{{ forloop.counter }}" aria-hidden="true">
           <div class="mb-3">
             <label class="form-label">Foto de empleado (Opcional)</label>
             <div class="custom-file">
-                <input type="file" class="custom-file-input"  name="imagen" >
+                <input type="file" class="custom-file-input"  name="imagen" accept="image/jpeg" >
                 <label class="custom-file-label">Seleccionar archivo...</label>
               </div>
 

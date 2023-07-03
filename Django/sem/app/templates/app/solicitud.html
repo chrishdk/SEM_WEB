@@ -153,11 +153,10 @@
         <div class="modal-body">
             <form method="POST" enctype="multipart/form-data" action="">
                 {% csrf_token %}
-
+                <p class="text-danger"> * : Campos obligatorios</p>
                 <div class="mb-3">
-                    insumos
-                    <label class="form-label">Solicitud</label>
-                    <input type="" class="form-control" name="solicitud">
+                    <label class="form-label">Solicitud <span class="text-danger">*</span></label>
+                    <input type="" required class="form-control" name="solicitud">
                     <!-- <select class="form-control" name="solicitud" id="">
                         <option value="">Seleccionar</option>
                     {% for i in insumos %}
@@ -168,7 +167,7 @@
 
 
                 <div class="mb-3">
-                    <label class="form-label">Sucursal</label>
+                    <label class="form-label">Sucursal <span class="text-danger">*</span></label>
                     <select class="form-control" name="sucursal" id="">
                         <option value="">Seleccionar</option>
                     {% for s in sucursal %}
@@ -180,7 +179,7 @@
 
                 <div class="mb-3">
 
-                    <label class="form-label">Solicitado</label>
+                    <label class="form-label">Solicitado <span class="text-danger">*</span></label>
                     <select class="form-control" name="solicitado" id="">
                         <option value="">Seleccionar</option>
                     {% for u in usuarios %}

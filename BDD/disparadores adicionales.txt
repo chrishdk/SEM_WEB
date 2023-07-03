@@ -1,0 +1,120 @@
+create or replace TRIGGER crear_usuario
+AFTER INSERT ON Empleado
+FOR EACH ROW
+DECLARE
+    USUARIO VARCHAR2(50);
+    CONTRASENA VARCHAR2(50);
+BEGIN
+    USUARIO := LOWER(SUBSTR(:NEW.p_nombre, 1, 2)) || '.' || LOWER(:NEW.p_apellido);
+    CONTRASENA := :NEW.rut || EXTRACT(YEAR FROM SYSDATE);
+
+    INSERT INTO USUARIO (USUARIO, CONTRASENA, EMPLEADO_RUT, ESTADO_U_ID_ESTADO_U)
+    VALUES (USUARIO, CONTRASENA, :NEW.rut, 1);
+END;
+
+
+create or replace TRIGGER trigger_empleado_historial
+AFTER INSERT OR UPDATE ON empleado
+FOR EACH ROW
+DECLARE
+    v_id_historial NUMBER;
+BEGIN
+    SELECT historial_seq.NEXTVAL INTO v_id_historial FROM DUAL;
+
+    IF INSERTING THEN
+        INSERT INTO historial (id, fecha, descripcion, origen)
+        VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), 'Empleado Ingresado' || '--' || 'RUT: ' || :NEW.rut || '-' || :NEW.dv_rut || ' - ' || 'Nombre: ' || :NEW.p_nombre || ' ' || :NEW.s_nombre || ' - ' || 'Apellido: ' || :NEW.p_apellido || ' ' || :NEW.s_apellido || ' - ' || 'Email: ' || :NEW.email || ' - ' || 'Cargo: ' || :NEW.cargo_emp_id_cargo_emp || ' - ' || 'Sucursal: ' || :NEW.sucursal_id_sucursal, null);
+    ELSIF UPDATING THEN
+        INSERT INTO historial (id, fecha, descripcion)
+        VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), 'Empleado Actualizado' || '--' || 'RUT: ' || :NEW.rut || '-' || :NEW.dv_rut || ' - ' || 'Nuevo nombre: ' || :NEW.p_nombre || ' ' || :NEW.s_nombre || ' - ' || 'Nuevo apellido: ' || :NEW.p_apellido || ' ' || :NEW.s_apellido || ' - ' || 'Nuevo email: ' || :NEW.email || ' - ' || 'Nuevo cargo: ' || :NEW.cargo_emp_id_cargo_emp || ' - ' || 'Nueva sucursal: ' || :NEW.sucursal_id_sucursal);
+    END IF;
+END;
+
+
+create or replace TRIGGER trigger_insertar_fecha_reporte
+BEFORE INSERT ON reporte
+FOR EACH ROW
+BEGIN
+    :NEW.fecha_ingreso := SYSTIMESTAMP - INTERVAL '4' HOUR;
+END;
+
+
+create or replace TRIGGER trigger_insertar_fecha_solicitud
+BEFORE INSERT ON solicitud
+FOR EACH ROW
+BEGIN
+    :NEW.fecha := SYSTIMESTAMP - INTERVAL '4' HOUR;
+END;
+
+
+create or replace TRIGGER trigger_insumo_historial
+AFTER INSERT OR UPDATE ON insumos
+FOR EACH ROW
+DECLARE
+    v_id_historial NUMBER;
+BEGIN
+    SELECT historial_seq.NEXTVAL INTO v_id_historial FROM DUAL;
+
+    IF INSERTING THEN
+        INSERT INTO historial (id, fecha, descripcion, origen)
+        VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), 'Insumo Ingresado' || '--' || 'id insumo: ' || :NEW.id_insumo || ' - ' || 'Insumo: ' || :NEW.insumo || ' - ' || 'Stock: ' || :NEW.stock || ' - ' || 'Color: ' || :NEW.color || ' - ' || 'Sucursal: ' || :NEW.sucursal_id_sucursal, null);
+    ELSIF UPDATING THEN
+        INSERT INTO historial (id, fecha, descripcion)
+        VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), 'Insumo Actualizado' || '--' || 'id insumo: ' || :NEW.id_insumo || ' - ' || 'Nuevo stock: ' || :NEW.stock || ' - ' || 'Nuevo color: ' || :NEW.color || ' - ' || 'Nueva sucursal: ' || :NEW.sucursal_id_sucursal);
+    END IF;
+END;
+
+
+create or replace TRIGGER trigger_reporte_historial
+AFTER INSERT OR UPDATE ON reporte
+FOR EACH ROW
+DECLARE
+    v_id_historial NUMBER;
+BEGIN
+    SELECT historial_seq.NEXTVAL INTO v_id_historial FROM DUAL;
+
+    IF INSERTING THEN
+        INSERT INTO historial (id, fecha, ingresado, descripcion, origen)
+        VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), :NEW.usuario_usuario,'Reporte Ingreso'||'--'||'id reporte: '|| :NEW.id_reporte|| ' - ' ||'Titulo: '|| :NEW.titulo || ' - ' || :NEW.asignado,null);
+    ELSIF UPDATING THEN
+        INSERT INTO historial (id, fecha, descripcion)
+        VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'),'Reporte Asignacion'||'--'||'id reporte: '|| :NEW.id_reporte || ' - ' ||'Nuevo asignado: '|| :NEW.asignado);
+    END IF;
+END;
+
+
+create or replace TRIGGER trigger_solicitud_historial
+AFTER INSERT OR UPDATE ON solicitud
+FOR EACH ROW
+DECLARE
+    v_id_historial NUMBER;
+BEGIN
+    SELECT historial_seq.NEXTVAL INTO v_id_historial FROM DUAL;
+
+    IF INSERTING THEN
+        INSERT INTO historial (id, fecha, ingresado, descripcion, origen)
+        VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), :NEW.usuario_usuario,'Solicitud Ingreso'||'--'||'id reporte: '|| :NEW.id_solicitud|| ' - ' ||'Titulo: '|| :NEW.solicitud || ' - ' || :NEW.SUCURSAL_ID_SUCURSAL,null);
+    ELSIF UPDATING THEN
+        INSERT INTO historial (id, fecha, descripcion)
+        VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'),'Solicitud Estado'||'--'||'id solicitud: '|| :NEW.id_solicitud || ' - ' ||'Nuevo Estado: '|| :NEW.ESTADO_S_ID_ESTADO_SOLICITUD);
+    END IF;
+END;
+
+
+create or replace TRIGGER trigger_usuario_historial
+AFTER INSERT OR UPDATE ON usuario
+FOR EACH ROW
+DECLARE
+    v_id_historial NUMBER;
+BEGIN
+    SELECT historial_seq.NEXTVAL INTO v_id_historial FROM DUAL;
+
+    IF INSERTING THEN
+        INSERT INTO historial (id, fecha, descripcion, origen)
+        VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), 'Usuario Ingresado' || '--' || 'Usuario: ' || :NEW.usuario || ' - ' || 'Empleado: ' || :NEW.empleado_rut || ' - ' || 'Estado: ' || :NEW.estado_u_id_estado_u, null);
+    ELSIF UPDATING THEN
+        INSERT INTO historial (id, fecha, descripcion)
+        VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), 'Usuario Actualizado' || '--' || 'Usuario: ' || :NEW.usuario || ' - ' || 'Nuevo empleado: ' || :NEW.empleado_rut || ' - ' || 'Nuevo estado: ' || :NEW.estado_u_id_estado_u);
+    END IF;
+END;
+

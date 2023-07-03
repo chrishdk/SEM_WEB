@@ -1,0 +1,621 @@
+create or replace PROCEDURE contar_reportes_mes_actual (
+  cantidad OUT NUMBER
+) AS
+BEGIN
+  SELECT COUNT(*)
+  INTO cantidad
+  FROM reporte
+  WHERE EXTRACT(MONTH FROM fecha_ingreso) = EXTRACT(MONTH FROM SYSDATE);
+END;
+
+
+create or replace PROCEDURE contar_reportes_dia_actual (
+  cantidad OUT NUMBER
+) AS
+    v_fecha_actual TIMESTAMP;
+BEGIN
+  v_fecha_actual := SYSTIMESTAMP - INTERVAL '4' HOUR;
+  SELECT COUNT(*)
+  INTO cantidad
+  FROM reporte
+  WHERE fecha_ingreso >=  TRUNC(v_fecha_actual) AND fecha_ingreso <  TRUNC(v_fecha_actual) + 1;
+END;
+
+
+create or replace PROCEDURE contar_reportes_no_asignados (
+  cantidad OUT NUMBER
+) AS
+BEGIN
+  SELECT COUNT(*)
+  INTO cantidad
+  FROM reporte
+  WHERE (asignado = 'no' OR asignado IS NULL);
+END;
+
+
+create or replace PROCEDURE contar_Solicitud_dia_actual (
+  cantidad OUT NUMBER
+) AS
+  v_fecha_actual TIMESTAMP;
+BEGIN
+  -- Restar 4 horas a la fecha actual
+  v_fecha_actual := SYSTIMESTAMP - INTERVAL '4' HOUR;
+
+  -- Realizar la consulta utilizando la fecha ajustada
+  SELECT COUNT(*)
+  INTO cantidad
+  FROM solicitud
+  WHERE fecha >= TRUNC(v_fecha_actual) AND fecha < TRUNC(v_fecha_actual) + 1;
+END;
+
+
+create or replace PROCEDURE contar_solicitud_mes_actual (
+  cantidad OUT NUMBER
+) AS
+BEGIN
+  SELECT COUNT(*)
+  INTO cantidad
+  FROM solicitud
+  WHERE EXTRACT(MONTH FROM fecha) = EXTRACT(MONTH FROM SYSDATE);
+END;
+
+
+create or replace PROCEDURE contar_SOLICITUD_pendiente (
+  cantidad OUT NUMBER
+) AS
+BEGIN
+  SELECT COUNT(*)
+  INTO cantidad
+  FROM solicitud
+  WHERE (ESTADO_S_ID_ESTADO_SOLICITUD = '1' );
+END;
+
+
+create or replace PROCEDURE obtener_insumos_con_stock_bajo(p_cursor OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN p_cursor FOR
+    SELECT ID_INSUMO, INSUMO, STOCK, COLOR, SUCURSAL_ID_SUCURSAL
+    FROM insumos
+    WHERE STOCK < 10;
+END;
+
+
+create or replace PROCEDURE SP_LISTAR_EMPLEADO(EMPLEADO OUT SYS_REFCURSOR)
+IS
+BEGIN
+  OPEN EMPLEADO FOR
+    SELECT E.RUT, E.DV_RUT, E.P_NOMBRE, E.S_NOMBRE, E.P_APELLIDO, E.S_APELLIDO,
+           E.EMAIL, E.CARGO_EMP_ID_CARGO_EMP, E.SUCURSAL_ID_SUCURSAL, E.IMAGEN,
+           C.ID_CARGO_EMP, C.CARGO,
+           S.ID_SUCURSAL, S.SUCURSAL, S.DIRECCION, S.N_DIRECCION, S.COMUNA_ID_COMUNA
+    FROM EMPLEADO E
+    JOIN CARGO_EMP C ON E.CARGO_EMP_ID_CARGO_EMP = C.ID_CARGO_EMP
+    JOIN SUCURSAL S ON E.SUCURSAL_ID_SUCURSAL = S.ID_SUCURSAL;
+END;
+
+
+
+create or replace procedure sp_agregar_empleado(
+    v_rut number,
+    v_dv_rut varchar2,
+    v_p_nombre varchar2,
+    v_s_nombre varchar2,
+    v_p_apellido  varchar2,
+    v_s_apellido  varchar2,
+    v_email  varchar2,
+    v_cargo_emp_id_cargo_emp  number,
+    v_sucursal_id_sucursal number,
+    v_salida out number
+)
+is
+    v_count number;
+begin
+    -- Validar si el rut ya existe
+    select count(*) into v_count
+    from empleado
+    where rut = v_rut and dv_rut = v_dv_rut;
+
+    if v_count > 0 then
+        v_salida := 0; -- Rut ya existe, establecer salida en 0 para indicar un error
+    else
+        -- Insertar empleado
+        insert into empleado (
+            rut,
+            dv_rut,
+            p_nombre,
+            s_nombre,
+            p_apellido,
+            s_apellido,
+            email,
+            cargo_emp_id_cargo_emp,
+            sucursal_id_sucursal
+        )
+        values (
+            v_rut,
+            v_dv_rut,
+            v_p_nombre,
+            v_s_nombre,
+            v_p_apellido,
+            v_s_apellido,
+            v_email,
+            v_cargo_emp_id_cargo_emp,
+            v_sucursal_id_sucursal
+        );
+
+        commit;
+        v_salida := 1; -- Inserción exitosa
+    end if;
+
+    exception
+        when others then
+            v_salida := 0; -- Ocurrió un error, establecer salida en 0
+end;
+
+
+
+create or replace PROCEDURE SP_MODIFICAR_EMPLEADO(
+    v_rut number,
+    v_dv_rut varchar2,
+    v_p_nombre varchar2,
+    v_s_nombre varchar2,
+    v_p_apellido  varchar2,
+    v_s_apellido  varchar2,
+    v_email  varchar2,
+    v_cargo_emp_id_cargo_emp  number,
+    v_sucursal_id_sucursal number,
+    v_salida out number
+)
+IS
+BEGIN
+
+  UPDATE EMPLEADO SET 
+  p_nombre = v_p_nombre,
+  s_nombre = v_s_nombre,
+  p_apellido = v_p_apellido,
+  s_apellido = v_s_apellido,
+  email = v_email,
+  cargo_emp_id_cargo_emp = v_cargo_emp_id_cargo_emp,
+  sucursal_id_sucursal = v_sucursal_id_sucursal
+  where rut = v_rut;
+
+  COMMIT;
+  v_salida:=1;
+    exception
+    when others then
+        v_salida:=0;
+
+END;
+
+
+create or replace PROCEDURE SP_AGREGAR_REPORTE (
+    p_titulo IN VARCHAR2,
+    p_descripcion IN VARCHAR2,
+    p_fecha_ingreso TIMESTAMP,
+    p_usuario_usuario IN VARCHAR2,
+    p_prioridad_id_prioridad IN NUMBER,
+    p_piso_id_piso IN NUMBER,
+    p_sector_id_sector IN NUMBER,
+    p_estado_r_id_estado IN NUMBER,
+    p_sucursal_id_sucursal IN NUMBER
+)
+AS
+BEGIN
+
+    INSERT INTO reporte (
+        titulo,
+        descripcion,
+        FECHA_INGRESO,
+        usuario_usuario,
+        prioridad_id_prioridad,
+        piso_id_piso,
+        sector_id_sector,
+        estado_r_id_estado,
+        sucursal_id_sucursal
+    ) VALUES (
+        p_titulo,
+        p_descripcion,
+        p_FECHA_INGRESO,
+        p_usuario_usuario,
+        p_prioridad_id_prioridad,
+        p_piso_id_piso,
+        p_sector_id_sector,
+        p_estado_r_id_estado,
+        p_sucursal_id_sucursal
+    );
+
+
+
+    COMMIT; 
+
+END;
+
+
+create or replace PROCEDURE SP_MODIFICAR_REPORTE(
+    v_id_reporte NUMBER,
+    v_asignado VARCHAR2
+)
+IS
+BEGIN
+  UPDATE REPORTE
+  SET asignado = v_asignado
+  WHERE id_reporte = v_id_reporte;
+  
+  COMMIT;
+END;
+
+
+create or replace PROCEDURE SP_ASIGNAR_REPORTE(
+    v_id_reporte NUMBER,
+    v_asignado VARCHAR2 )
+IS
+BEGIN
+
+  UPDATE REPORTE SET 
+  asignado=v_asignado
+  where id_reporte = v_id_reporte;
+
+  COMMIT;
+
+END;
+
+
+create or replace PROCEDURE SP_LISTAR_REPORTE(REPORTE OUT SYS_REFCURSOR)
+IS
+BEGIN
+    OPEN REPORTE FOR
+    SELECT R.ID_REPORTE,
+           R.TITULO,
+           R.DESCRIPCION,
+           R.FECHA_INGRESO,
+           R.USUARIO_USUARIO,
+           R.PRIORIDAD_ID_PRIORIDAD,
+           R.PISO_ID_PISO,
+           R.SECTOR_ID_SECTOR,
+           R.ESTADO_R_ID_ESTADO,
+           R.SUCURSAL_ID_SUCURSAL,
+           R.IMAGEN,
+           R.ASIGNADO,
+           R.DESC_SOLUCION,
+           PR.PRIORIDAD,
+           PS.PISO,
+           SE.SECTOR,
+           ER.ESTADO,
+           SU.SUCURSAL,
+           SU.DIRECCION,
+           SU.N_DIRECCION
+    FROM REPORTE R
+    INNER JOIN PRIORIDAD PR ON R.PRIORIDAD_ID_PRIORIDAD = PR.ID_PRIORIDAD
+    INNER JOIN PISO PS ON R.PISO_ID_PISO = PS.ID_PISO
+    INNER JOIN SECTOR SE ON R.SECTOR_ID_SECTOR = SE.ID_SECTOR
+    INNER JOIN ESTADO_R ER ON R.ESTADO_R_ID_ESTADO = ER.ID_ESTADO
+    INNER JOIN SUCURSAL SU ON R.SUCURSAL_ID_SUCURSAL = SU.ID_SUCURSAL
+    ORDER BY R.ID_REPORTE DESC;
+END;
+
+
+create or replace PROCEDURE SP_MODIFICAR_SOLICITUD_ESTADO(
+    v_ID_SOLICITUD number,
+    v_ESTADO_S_ID_ESTADO_SOLICITUD number)
+IS
+BEGIN
+
+  UPDATE SOLICITUD SET 
+    ESTADO_S_ID_ESTADO_SOLICITUD = v_ESTADO_S_ID_ESTADO_SOLICITUD
+  where ID_SOLICITUD = v_ID_SOLICITUD;
+
+  COMMIT;
+
+END;
+
+
+create or replace PROCEDURE SP_LISTAR_SOLICITUD(SOLICITUD OUT SYS_REFCURSOR)
+IS
+BEGIN
+    OPEN SOLICITUD FOR
+    SELECT S.*, SU.SUCURSAL
+    FROM SOLICITUD S
+    INNER JOIN SUCURSAL SU ON S.SUCURSAL_ID_SUCURSAL = SU.ID_SUCURSAL
+    ORDER BY S.ID_SOLICITUD DESC;
+END;
+
+
+create or replace PROCEDURE SP_AGREGAR_SOLICITUD(
+  v_solicitud VARCHAR2,
+  v_sucursal_id_sucursal NUMBER,
+  v_usuario_usuario VARCHAR2,
+  v_salida OUT NUMBER
+)
+IS
+BEGIN
+  INSERT INTO solicitud (
+    solicitud,
+
+    sucursal_id_sucursal,
+    usuario_usuario
+  )
+  VALUES (
+    v_solicitud,
+    v_sucursal_id_sucursal,
+    v_usuario_usuario
+  );
+  COMMIT;
+  v_salida := 1;
+EXCEPTION
+  WHEN OTHERS THEN
+    v_salida := 0;
+END;
+
+
+create or replace PROCEDURE SP_LISTAR_INSUMO(INSUMOS OUT SYS_REFCURSOR)
+IS
+BEGIN
+    OPEN INSUMOS FOR
+    SELECT I.*, S.SUCURSAL
+    FROM INSUMOS I
+    INNER JOIN SUCURSAL S ON I.SUCURSAL_ID_SUCURSAL = S.ID_SUCURSAL
+    ORDER BY I.ID_INSUMO ASC;
+END;
+
+
+create or replace procedure SP_AGREGAR_INSUMO(
+    v_insumo varchar2,
+    v_stock number,
+    v_color varchar2,
+    v_sucursal_id_sucursal  number,
+    v_salida out number
+)
+is
+begin
+    insert into insumos  (
+    insumo,
+    stock,
+    color,
+    sucursal_id_sucursal ) 
+    values (
+    v_insumo,
+    v_stock,
+    v_color,
+    v_sucursal_id_sucursal
+    );
+    commit;
+    v_salida:=1;
+    exception
+    when others then
+        v_salida:=0;
+end;
+
+
+create or replace PROCEDURE SP_MODIFICAR_INSUMO(
+    v_id_insumo number,
+    v_insumo varchar2,
+    v_stock  number,
+    v_color  varchar2,
+    v_sucursal_id_sucursal number,
+    v_salida out number)
+IS
+BEGIN
+
+  UPDATE INSUMOS SET 
+  insumo = v_insumo,
+  stock = v_stock,
+  color = v_color,
+  sucursal_id_sucursal = v_sucursal_id_sucursal
+  where id_insumo = v_id_insumo;
+
+    COMMIT;
+    v_salida:=1;
+    exception
+    when others then
+        v_salida:=0;
+
+END;
+
+
+create or replace PROCEDURE SP_MODIFICAR_INSUMO_SUMAR (
+    v_id_insumo IN NUMBER,
+    v_cantidad IN NUMBER,
+    v_salida OUT NUMBER
+)
+IS
+BEGIN
+    UPDATE INSUMOS
+    SET stock = stock + v_cantidad
+    WHERE id_insumo = v_id_insumo;
+
+    COMMIT;
+    v_salida := 1;
+EXCEPTION
+    WHEN OTHERS THEN
+        v_salida := 0;
+END;
+
+
+
+create or replace PROCEDURE SP_MODIFICAR_USUARIO_ESTADO(
+    v_usuario varchar2,
+    v_estado_u_id_estado_u number)
+IS
+BEGIN
+
+  UPDATE USUARIO SET 
+    estado_u_id_estado_u = v_estado_u_id_estado_u
+  where usuario = v_usuario;
+
+  COMMIT;
+
+END;
+
+
+create or replace procedure SP_LISTAR_USUARIO(usuario out SYS_REFCURSOR)
+IS
+
+BEGIN
+    OPEN usuario FOR SELECT * FROM usuario;
+END;
+
+
+create or replace PROCEDURE SP_MODIFICAR_USUARIO(
+    v_usuario varchar2,
+    v_contrasena varchar2,
+    v_empleado_rut  number,
+    v_estado_u_id_estado_u number)
+IS
+BEGIN
+
+  UPDATE USUARIO SET 
+    usuario = v_usuario,
+    contrasena = v_contrasena,
+    empleado_rut = v_empleado_rut,
+    estado_u_id_estado_u = v_estado_u_id_estado_u
+  where usuario = v_usuario;
+
+  COMMIT;
+
+END;
+
+
+create or replace PROCEDURE SP_LISTAR_HISTORIAL(HISTORIAL OUT SYS_REFCURSOR)
+IS
+BEGIN
+    OPEN HISTORIAL FOR
+    SELECT * FROM HISTORIAL
+    ORDER BY fecha DESC; -- Ordenar por fecha en orden descendente
+END;
+
+
+create or replace PROCEDURE sp_agregar_sucursal(
+    v_sucursal VARCHAR2,
+    v_direccion VARCHAR2,
+    v_n_direccion NUMBER,
+    v_comuna_id_comuna NUMBER,
+    v_salida OUT NUMBER
+)
+IS
+BEGIN
+    -- Insertar sucursal
+    INSERT INTO sucursal (
+        sucursal,
+        direccion,
+        n_direccion,
+        comuna_id_comuna
+    )
+    VALUES (
+        v_sucursal,
+        v_direccion,
+        v_n_direccion,
+        v_comuna_id_comuna
+    );
+
+    COMMIT;
+    v_salida := 1; -- Inserción exitosa
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            v_salida := 0; -- Ocurrió un error, establecer salida en 0
+END;
+
+
+create or replace PROCEDURE sp_agregar_piso(
+    v_piso NUMBER,
+    v_salida OUT NUMBER
+)
+IS
+BEGIN
+    -- Insertar piso
+    INSERT INTO piso (
+        piso
+    )
+    VALUES (
+        v_piso
+    );
+
+    COMMIT;
+    v_salida := 1; -- Inserción exitosa
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            v_salida := 0; -- Ocurrió un error, establecer salida en 0
+END;
+
+
+
+create or replace PROCEDURE sp_agregar_sector(
+    v_sector VARCHAR2,
+    v_salida OUT NUMBER
+)
+IS
+BEGIN
+    -- Insertar sector
+    INSERT INTO sector (
+        sector
+    )
+    VALUES (
+        v_sector
+    );
+
+    COMMIT;
+    v_salida := 1; -- Inserción exitosa
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            v_salida := 0; -- Ocurrió un error, establecer salida en 0
+END;
+
+
+
+create or replace procedure SP_LISTAR_SUCURSAL(SUCURSAL out SYS_REFCURSOR)
+IS
+
+BEGIN
+    OPEN SUCURSAL FOR SELECT * FROM SUCURSAL;
+END;
+
+
+
+create or replace procedure SP_LISTAR_cargo(cargo_emp out SYS_REFCURSOR)
+IS
+
+BEGIN
+    OPEN cargo_emp FOR SELECT * FROM cargo_emp;
+END;
+
+
+create or replace procedure SP_LISTAR_COMUNA(comuna out SYS_REFCURSOR)
+IS
+
+BEGIN
+    OPEN comuna FOR SELECT * FROM comuna;
+END;
+
+
+create or replace procedure SP_LISTAR_PRIORIDAD(PRIORIDAD out SYS_REFCURSOR)
+IS
+
+BEGIN
+    OPEN PRIORIDAD FOR SELECT * FROM PRIORIDAD;
+END;
+
+
+create or replace procedure SP_LISTAR_PISO(PISO out SYS_REFCURSOR)
+IS
+
+BEGIN
+    OPEN PISO FOR SELECT * FROM PISO;
+END;
+
+
+create or replace procedure SP_LISTAR_SECTOR(SECTOR out SYS_REFCURSOR)
+IS
+
+BEGIN
+    OPEN SECTOR FOR SELECT * FROM SECTOR;
+END;
+
+
+create or replace procedure SP_LISTAR_ESTADO_R(ESTADO_R out SYS_REFCURSOR)
+IS
+
+BEGIN
+    OPEN ESTADO_R FOR SELECT * FROM ESTADO_R;
+END;
+
