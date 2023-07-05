@@ -1,0 +1,4 @@
+alter session set "_ORACLE_SCRIPT"= true;
+
+-- USER SQL
+CREATE USER SEM IDENTIFIED BY "123456";

@@ -10,7 +10,7 @@ BEGIN
 
     INSERT INTO USUARIO (USUARIO, CONTRASENA, EMPLEADO_RUT, ESTADO_U_ID_ESTADO_U)
     VALUES (USUARIO, CONTRASENA, :NEW.rut, 1);
-END;
+END;/
 
 
 create or replace TRIGGER trigger_empleado_historial
@@ -29,6 +29,7 @@ BEGIN
         VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), 'Empleado Actualizado' || '--' || 'RUT: ' || :NEW.rut || '-' || :NEW.dv_rut || ' - ' || 'Nuevo nombre: ' || :NEW.p_nombre || ' ' || :NEW.s_nombre || ' - ' || 'Nuevo apellido: ' || :NEW.p_apellido || ' ' || :NEW.s_apellido || ' - ' || 'Nuevo email: ' || :NEW.email || ' - ' || 'Nuevo cargo: ' || :NEW.cargo_emp_id_cargo_emp || ' - ' || 'Nueva sucursal: ' || :NEW.sucursal_id_sucursal);
     END IF;
 END;
+/
 
 
 create or replace TRIGGER trigger_insertar_fecha_reporte
@@ -37,6 +38,7 @@ FOR EACH ROW
 BEGIN
     :NEW.fecha_ingreso := SYSTIMESTAMP - INTERVAL '4' HOUR;
 END;
+/
 
 
 create or replace TRIGGER trigger_insertar_fecha_solicitud
@@ -46,6 +48,7 @@ BEGIN
     :NEW.fecha := SYSTIMESTAMP - INTERVAL '4' HOUR;
 END;
 
+/
 
 create or replace TRIGGER trigger_insumo_historial
 AFTER INSERT OR UPDATE ON insumos
@@ -62,7 +65,8 @@ BEGIN
         INSERT INTO historial (id, fecha, descripcion)
         VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), 'Insumo Actualizado' || '--' || 'id insumo: ' || :NEW.id_insumo || ' - ' || 'Nuevo stock: ' || :NEW.stock || ' - ' || 'Nuevo color: ' || :NEW.color || ' - ' || 'Nueva sucursal: ' || :NEW.sucursal_id_sucursal);
     END IF;
-END;
+END;/
+
 
 
 create or replace TRIGGER trigger_reporte_historial
@@ -80,7 +84,8 @@ BEGIN
         INSERT INTO historial (id, fecha, descripcion)
         VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'),'Reporte Asignacion'||'--'||'id reporte: '|| :NEW.id_reporte || ' - ' ||'Nuevo asignado: '|| :NEW.asignado);
     END IF;
-END;
+END;/
+
 
 
 create or replace TRIGGER trigger_solicitud_historial
@@ -99,6 +104,7 @@ BEGIN
         VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'),'Solicitud Estado'||'--'||'id solicitud: '|| :NEW.id_solicitud || ' - ' ||'Nuevo Estado: '|| :NEW.ESTADO_S_ID_ESTADO_SOLICITUD);
     END IF;
 END;
+/
 
 
 create or replace TRIGGER trigger_usuario_historial
@@ -117,4 +123,5 @@ BEGIN
         VALUES (v_id_historial, TO_CHAR(SYSTIMESTAMP - INTERVAL '4' HOUR, 'DD Mon YYYY HH24:MI:SS'), 'Usuario Actualizado' || '--' || 'Usuario: ' || :NEW.usuario || ' - ' || 'Nuevo empleado: ' || :NEW.empleado_rut || ' - ' || 'Nuevo estado: ' || :NEW.estado_u_id_estado_u);
     END IF;
 END;
+/
 

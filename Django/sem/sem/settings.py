@@ -79,14 +79,37 @@ WSGI_APPLICATION = 'sem.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.oracle',
+#         'NAME': 'projectsem_high',
+#         'USER': 'kenny',
+#         'PASSWORD': 'Ke123456789**'
+#     }
+# }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.oracle',
+#         'NAME': 'localhost/orclpdb',  # Nombre de conexión al servicio de Oracle
+#         'USER': 'SEM',
+#         'PASSWORD': '123456',
+#         'HOST': 'localhost',
+#         'PORT': '1521',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'projectsem_high',
-        'USER': 'kenny',
-        'PASSWORD': 'Ke123456789**'
+        'NAME': 'localhost:1521/XE',  # Reemplaza con tu configuración correcta
+        'USER': 'SEM',
+        'PASSWORD': '123456',
     }
 }
+
+
 
 
 # Password validation

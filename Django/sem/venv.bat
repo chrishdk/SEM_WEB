@@ -1,1 +1,1 @@
-c:/Proyecto/P1/Django/sem_venv/Scripts/activate.bat
+D:\GitHub\SEM_WEB\Django\sem-env\Scripts\activate.bat
