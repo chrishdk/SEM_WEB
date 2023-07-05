@@ -11,3 +11,26 @@ python manage.py runserver
 
 
 python .\manage.py inspectdb > .\app\models.py
+
+
+--Nueva guia 05/07/2023
+
+Instalar python
+
+Instalar Microsoft C++ Build Tools
+"Desktop development with C++"
+"Windows 10 SDK"
+
+python -m venv sem-env
+
+myenv\Scripts\activate
+
+pip list
+
+pip install django
+
+pip install cx_Oracle
+
+pip install Pillow
+
+pip install openpyxl
