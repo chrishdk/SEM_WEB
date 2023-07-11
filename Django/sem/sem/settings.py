@@ -104,7 +104,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'localhost:1521/XE',  # Reemplaza con tu configuración correcta
-        'USER': 'SEM',
+        'USER': 'ADMINSEM',
         'PASSWORD': '123456',
     }
 }
