@@ -1,252 +1,343 @@
-{% extends 'app/base2.html' %} {% load static %}{% block js %}{% endblock %}
+{% extends 'app/base2.html' %} {% load static %}
+{% block js %}
+<script src="{% static 'app/js/sucursal.js' %}"></script>
+{% endblock %}
 {%block css %}{% endblock %} {% block contenido %}
 <div class="container-fluid">
-    {% if messages %}
-    <div class="alert alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x" role="alert">
-        {% for message in messages %}
-        <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
-            {{ message }}
-        </div>
-        {% endfor %}
+  {% if messages %}
+  <div
+    class="alert alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x"
+    role="alert"
+  >
+    {% for message in messages %}
+    <div
+      class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}"
+    >
+      {{ message }}
     </div>
-    {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Sucursal</h1>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#Agregarsucursal">
-            Ingresar Sucursal
-        </button>
-    </div>
-
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tabla sucursal</h6>
-        </div>
-
-        <div class="card-body">
-            <div class="table-responsive">
-                <!-- Inicio Tabla Empleados -->
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Sucursal</th>
-                            <th>Direccion</th>
-                            <th>N°</th>
-                            <th>Comuna</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for s in sucursal %}
-                        <tr>
-                            <td>{{ s.0 }}</td>
-                            <td>{{ s.1 }}</td>
-                            <td>{{ s.2 }}</td>
-                            <td>{{ s.3 }}</td>
-                            <td>{{ s.4 }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <!-- Fin del Modal modificar -->
-        </div>
-    </div>
-<div class="row">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Piso</h1>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AgregarPiso">
-                Ingresar Piso
-            </button>
-        </div>
-
-
-    </div>
-
-    <div class="row">
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <div class="table-responsive">
-                <!-- Inicio Tabla Empleados -->
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ID_PISO</th>
-                            <th>PISO</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for p in piso %}
-                        <tr>
-                            <td>{{ p.0 }}</td>
-                            <td>{{ p.1 }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="row">
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Sector</h1>
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AgregarInsumo">
-        Ingresar Sector
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Sucursal</h1>
+    <button
+      type="button"
+      class="btn btn-success"
+      data-toggle="modal"
+      data-target="#Agregarsucursal"
+    >
+      Ingresar Sucursal
     </button>
-</div>
-</div>
+  </div>
 
-<div class="row">
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Tabla sucursal</h6>
+    </div>
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <!-- Inicio Tabla Sucursal -->
+        <table
+          class="table table-bordered"
+          id="dataTable"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Sucursal</th>
+              <th>Direccion</th>
+              <th>N°</th>
+              
+              <th>Comuna</th>
+              <th>Region</th>
+              <th>Opciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for s in sucursal %}
+            <tr>
+              <td>{{ s.0 }}</td>
+              <td>{{ s.1 }}</td>
+              <td>{{ s.2 }}</td>
+              <td>{{ s.3 }}</td>
+              <td>{{ s.4 }}</td>
+              <td>{{ s.5 }}</td>
+              <td></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- Fin del Modal modificar -->
+    </div>
+  </div>
+
+  
+  <!-- <div class="row">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Piso</h1>
+      <button
+        type="button"
+        class="btn btn-success"
+        data-toggle="modal"
+        data-target="#AgregarPiso"
+      >
+        Ingresar Piso
+      </button>
+    </div>
+  </div> -->
+
+  <!-- <div class="row">
     <div class="card shadow mb-4">
-        <div class="card-body">
-            <div class="table-responsive">
-                <!-- Inicio Tabla Empleados -->
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ID_SECTOR</th>
-                            <th>SECTOR</th>
-                        </tr>
-                    </thead>
+      <div class="card-body">
+        <div class="table-responsive"> -->
+          <!-- Inicio Tabla Empleados -->
+          <!-- <table
+            class="table table-bordered"
+            id="dataTable"
+            width="100%"
+            cellspacing="0"
+          >
+            <thead>
+              <tr>
+                <th>ID_PISO</th>
+                <th>PISO</th>
+              </tr>
+            </thead>
 
-                    <tbody>
-                        {% for se in sector %}
-                        <tr>
-                            <td>{{ se.0 }}</td>
-                            <td>{{ se.1 }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            <tbody>
+              {% for p in piso %}
+              <tr>
+                <td>{{ p.0 }}</td>
+                <td>{{ p.1 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table> -->
+        <!-- </div>
+      </div>
     </div>
+  </div> -->
+
+  <!-- <div class="row">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Sector</h1>
+      <button
+        type="button"
+        class="btn btn-success"
+        data-toggle="modal"
+        data-target="#AgregarInsumo"
+      >
+        Ingresar Sector
+      </button>
+    </div>
+  </div> -->
+
+  <!-- <div class="row">
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <div class="table-responsive">
+
+          <table
+            class="table table-bordered"
+            id="dataTable"
+            width="100%"
+            cellspacing="0"
+          >
+            <thead>
+              <tr>
+                <th>ID_SECTOR</th>
+                <th>SECTOR</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for se in sector %}
+              <tr>
+                <td>{{ se.0 }}</td>
+                <td>{{ se.1 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+
+  <div
+  class="modal fade"
+  id="Agregarsucursal"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="AgregarsucursalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="AgregarsucursalLabel">Ingresar sucursal</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form method="POST" enctype="multipart/form-data" action="">
+        <div class="modal-body">
+          {% csrf_token %}
+          <p class="text-danger"> * : Campos obligatorios</p>
+
+          <div class="mb-3">
+            <label class="form-label">Sucursal <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="sucursal" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Direccion <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="direccion" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Numero <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" name="numero" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Región <span class="text-danger">*</span></label>
+            <select class="form-control" name="region" id="id_region">
+              <option>Seleccionar</option>
+              {% for r in region %}
+              <option value="{{ r.0 }}">{{ r.1 }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        
+          <div class="mb-3">
+            <label class="form-label">Comuna <span class="text-danger">*</span></label>
+            <select class="form-control" name="comuna" id="id_comuna">
+              <option>Seleccionar</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <input type="hidden" name="accion" value="nuevos" />
+
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cerrar
+          </button>
+          <button type="submit" class="btn btn-primary">Ingresar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
+
 </div>
-    <!-- Modal Ingresar sucursal -->
-    <div class="modal fade" id="Agregarsucursal" data-backdrop="static" data-keyboard="false" tabindex="-1"
-        aria-labelledby="AgregarsucursalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="AgregarsucursalLabel">Ingresar insumo</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+<!-- Modal Ingresar sucursal -->
 
-                <form method="POST" enctype="multipart/form-data" action="">
-                    <div class="modal-body">
-                        {% csrf_token %}
 
-                        <div class="mb-3">
-                            <label class="form-label">Sucursal</label>
-                            <input type="text" class="form-control" name="sucursal" />
-                        </div>
+<!-- Modal Ingresar sector -->
 
-                        <div class="mb-3">
-                            <label class="form-label">Direccion</label>
-                            <input type="text" class="form-control" name="direccion" />
-                        </div>
+<!-- <div
+  class="modal fade"
+  id="AgregarInsumo"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="AgregarInsumoLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="AgregarInsumoLabel">Ingresar Sector</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST" enctype="multipart/form-data" action="">
+        <div class="modal-body">
+          {% csrf_token %}
 
-                        <div class="mb-3">
-                            <label class="form-label">Numero</label>
-                            <input type="number" class="form-control" name="numero" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Comuna</label>
-                            <select class="form-control" name="comuna" id="">
-                                <option>Seleccionar</option>
-                                {% for c in comuna %}
-                                <option value="{{c.0}}">{{c.1}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <input type="hidden" name="accion" value="nuevos" />
-
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
-                </form>
-            </div>
+          <div class="mb-3">
+            <label class="form-label">Sector</label>
+            <input type="" class="form-control" name="sector" />
+          </div>
         </div>
-    </div>
+        <div class="modal-footer">
+          <input type="hidden" name="accion" value="nuevosector" />
 
-    <!-- Modal Ingresar sector -->
-    <div class="modal fade" id="AgregarInsumo" data-backdrop="static" data-keyboard="false" tabindex="-1"
-        aria-labelledby="AgregarInsumoLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="AgregarInsumoLabel">Ingresar Sector</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="POST" enctype="multipart/form-data" action="">
-                    <div class="modal-body">
-                        {% csrf_token %}
-
-                        <div class="mb-3">
-                            <label class="form-label">Sector</label>
-                            <input type="" class="form-control" name="sector" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="hidden" name="accion" value="nuevosector" />
-
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
-                </form>
-            </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cerrar
+          </button>
+          <button type="submit" class="btn btn-primary">Enviar</button>
         </div>
+      </form>
     </div>
+  </div>
+</div> -->
 
-    <!-- Modal Ingresar Piso -->
-    <div class="modal fade" id="AgregarPiso" data-backdrop="static" data-keyboard="false" tabindex="-1"
-        aria-labelledby="AgregarPisoLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="AgregarPisoLabel">Ingresar Piso</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="POST" enctype="multipart/form-data" action="">
-                    <div class="modal-body">
-                        {% csrf_token %}
 
-                        <div class="mb-3">
-                            <label class="form-label">Piso</label>
-                            <input type="number" class="form-control" name="piso" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="hidden" name="accion" value="nuevopiso" />
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Cerrar
-                        </button>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
-                </form>
-            </div>
+<!-- Modal Ingresar Piso -->
+
+<!-- <div
+  class="modal fade"
+  id="AgregarPiso"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="AgregarPisoLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="AgregarPisoLabel">Ingresar Piso</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST" enctype="multipart/form-data" action="">
+        <div class="modal-body">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Piso</label>
+            <input type="number" class="form-control" name="piso" />
+          </div>
         </div>
+        <div class="modal-footer">
+          <input type="hidden" name="accion" value="nuevopiso" />
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cerrar
+          </button>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+      </form>
     </div>
-
-
-{% endblock %}
+  </div>
+</div> -->
+ {% endblock %}

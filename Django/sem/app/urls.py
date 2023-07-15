@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import reporte,inicio,empleado,usuarios,solicitud,prueba,prueba_emp,insumo,historial,export_to_excel,administracion
+from .views import reporte,inicio,empleado,usuarios,solicitud,prueba,prueba_emp,insumo,historial,export_to_excel,administracion,obtener_comunas_por_region
 from django.contrib import admin
 
 urlpatterns = [
@@ -22,4 +22,5 @@ urlpatterns = [
     path('pepe/', prueba_emp, name="prueba_emp"),
     path('export/', export_to_excel, name='export_to_excel'),
     path('administracion/', administracion, name="administracion"),
+    path('obtener_comunas_por_region/', obtener_comunas_por_region, name='obtener_comunas_por_region'),
 ]

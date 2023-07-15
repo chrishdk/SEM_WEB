@@ -44,7 +44,8 @@
                                             <th>Contraseña</th>
                                             <th>Rut</th>
                                             <th>Estado</th>
-                                            <th>Accion</th>
+                                            <th>Opcion estado</th>
+                                            <th>Opcion contraseña</th>
 
 
                                         </tr>
@@ -76,6 +77,8 @@
                                                 {% elif p.3 == 1 %}
                                                 <td>Habilitado</td>
                                                 {% endif %}
+
+                                                
                                             <td>
                                                 
 
@@ -96,7 +99,15 @@
                                                         <button type="submit" class="btn btn-danger">Deshabilitar</button>
                                                     </form>
                                                 {% endif %}
-
+                                            </td>
+                                                <td>
+                                                    <form action="" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="accion" value="restablecer">
+                                                        <input type="hidden" name="usuario" value="{{ p.0 }}">
+                                                        <input type="hidden" name="empleado_rut" value="{{ p.2 }}">
+                                                        <button type="submit" class="btn btn-warning">Restablecer</button>
+                                                    </form>
                                                   
                                             </td>
 

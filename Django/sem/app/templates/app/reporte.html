@@ -11,422 +11,596 @@
 {% block css %}
 <link href="{% static 'app/css/logo.css' %}" rel="stylesheet" />
 <link href="{% static 'app/css/all.css' %}" rel="stylesheet" />
-<link href="{% static 'app/css/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
+<link
+  href="{% static 'app/css/datatables/dataTables.bootstrap4.min.css' %}"
+  rel="stylesheet"
+/>
 
 {% endblock %} {% block contenido %}
 
 <div class="container-fluid">
   {% if messages %}
-  <div class="alert alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x" role="alert">
+  <div
+    class="alert alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x"
+    role="alert"
+  >
     {% for message in messages %}
-      <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
-        {{ message }}
-      </div>
+    <div
+      class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}"
+    >
+      {{ message }}
+    </div>
     {% endfor %}
   </div>
   {% endif %}
 
-
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-<h1 class="h3 mb-2 text-gray-800">Reportes</h1>
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#staticBackdrop">
-  Ingresar Reporte
-</button>
-
-</div>
-
-
-
-
-<div class="card shadow mb-4">
-  <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Tabla de Reportes</h6>
+    <h1 class="h3 mb-2 text-gray-800">Reportes</h1>
+    <button
+      type="button"
+      class="btn btn-success"
+      data-toggle="modal"
+      data-target="#staticBackdrop"
+    >
+      Ingresar Reporte
+    </button>
   </div>
 
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Tabla de Reportes</h6>
+    </div>
 
-  <div class="card-body">
-    <div class="table-responsive">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table
+          class="table table-bordered"
+          id="dataTable"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>N° Reporte</th>
+              <th>Titutlo</th>
+              <th>Descripcion</th>
+              <th>Fecha ingreso</th>
+              <th>Ingresado</th>
+              <th>Prioridad</th>
+              <th>Piso</th>
+              <th>Sector</th>
+              <th>Estado</th>
+              <th>Sucursal</th>
+              <th>Asignado</th>
+              <th>Solucion</th>
+              <th>Imagen</th>
+              <th>Accion</th>
+            </tr>
+          </thead>
 
+          <tbody>
+            {% for p in reporte %}
+            <tr>
+              <!-- ID -->
+              <td>{{ p.data.0 }}</td>
+              <!-- Titutlo -->
+              <td>{{ p.data.1 }}</td>
+              <!-- Descripcion -->
+              <td class="td-limite">{{ p.data.2 | title }}</td>
+              <!-- Fecha ingreso -->
+              <td>{{ p.data.3 | date:"d/m/Y h:m:s" }}</td>
+              <!-- Ingresado -->
+              <td>{{ p.data.4 }}</td>
+              <!-- Prioridad -->
+              <td>{{ p.data.13 | title }}</td>
+              <!-- Piso -->
+              <td>{{ p.data.14 | title }}</td>
+              <!-- Sector -->
+              <td>{{ p.data.15 | title }}</td>
+              <!-- Estado -->
+              <td>{{ p.data.16 | title }}</td>
+              <!-- sucursal -->
+              <td>{{ p.data.17 | title }}</td>
+              <!-- Asignado -->
+              <td>{{ p.data.11 }}</td>
+              <!-- Solucion -->
+              <td>{{ p.data.12 }}</td>
 
-      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-        <thead>
-          <tr>
-            <th>N° Reporte</th>
-            <th>Titutlo</th>
-            <th>Descripcion</th>
-            <th>Fecha ingreso</th>
-            <th>Ingresado</th>
-            <th>Prioridad</th>
-            <th>Piso</th>
-            <th>Sector</th>
-            <th>Estado</th>
-            <th>Sucursal</th>
-            <th>Asignado</th>
-            <th>Solucion</th>
-            <th>Imagen</th>
-            <th>Accion</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {% for p in reporte %}
-          <tr>
-            <!-- ID -->
-            <td>{{ p.data.0  }}</td>
-            <!-- Titutlo -->
-            <td>{{ p.data.1  }}</td>
-            <!-- Descripcion -->
-            <td class="td-limite">{{ p.data.2 | title }}</td>
-            <!-- Fecha ingreso -->
-            <td>{{ p.data.3 | date:"d/m/Y h:m:s" }}</td>
-            <!-- Ingresado -->
-            <td>{{ p.data.4  }}</td>
-            <!-- Prioridad -->
-            <td>{{ p.data.13 | title }}</td>
-            <!-- Piso -->
-            <td>{{ p.data.14 | title }}</td>
-            <!-- Sector -->
-            <td>{{ p.data.15 | title }}</td>
-            <!-- Estado -->
-            <td>{{ p.data.16 | title }}</td>
-            <!-- sucursal -->
-            <td>{{ p.data.17 | title }}</td>
-            <!-- Asignado -->
-            <td>{{ p.data.11 }}</td>
-            <!-- Solucion -->
-            <td>{{ p.data.12 }}</td>
-            
-            <!-- Imagen -->
-            <td>
-              {% if p.imagen %}
-              <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                data-target="#miModal{{ forloop.counter }}">
-                Ver</button>
-              <div class="modal fade" id="miModal{{ forloop.counter }}" tabindex="-1" role="dialog"
-                aria-labelledby="miModalLabel{{ forloop.counter }}" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="miModalLabel{{ forloop.counter }}">{{ p.data.0 }}-{{ p.data.1 }}
-                      </h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <!-- Contenido del modal -->
-                      <img src="data:image/jpeg;base64,{{ p.imagen }}" width="350" alt="Imagen" class="img-fluid">
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              <!-- Imagen -->
+              <td>
+                {% if p.imagen %}
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  data-toggle="modal"
+                  data-target="#miModal{{ forloop.counter }}"
+                >
+                  Ver
+                </button>
+                <div
+                  class="modal fade"
+                  id="miModal{{ forloop.counter }}"
+                  tabindex="-1"
+                  role="dialog"
+                  aria-labelledby="miModalLabel{{ forloop.counter }}"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5
+                          class="modal-title"
+                          id="miModalLabel{{ forloop.counter }}"
+                        >
+                          {{ p.data.0 }}-{{ p.data.1 }}
+                        </h5>
+                        <button
+                          type="button"
+                          class="close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <!-- Contenido del modal -->
+                        <img
+                          src="data:image/jpeg;base64,{{ p.imagen }}"
+                          width="350"
+                          alt="Imagen"
+                          class="img-fluid"
+                        />
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-dismiss="modal"
+                        >
+                          Cerrar
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              {% endif %}
-            </td>
-            <td>
+                {% endif %}
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#AsignarReporte{{ forloop.counter }}"
+                >
+                  Asignar
+                </button>
+                <!-- inicio del modal asignar reporte -->
+                <div
+                  class="modal fade"
+                  id="AsignarReporte{{ forloop.counter }}"
+                  data-backdrop="static"
+                  data-keyboard="false"
+                  tabindex="-1"
+                  aria-labelledby="AsignarReporteLabel{{ forloop.counter }}"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5
+                          class="modal-title"
+                          id="AsignarReporteLabel{{ forloop.counter }}"
+                        >
+                          Asignar Reporte
+                        </h5>
+                        <button
+                          type="button"
+                          class="close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form
+                          action=""
+                          method="POST"
+                          enctype="multipart/form-data"
+                        >
+                          {% csrf_token %}
 
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AsignarReporte{{ forloop.counter }}">
-                Asignar
-              </button>
-<!-- inicio del modal asignar reporte -->
-<div class="modal fade" id="AsignarReporte{{ forloop.counter }}" data-backdrop="static" data-keyboard="false" tabindex="-1"
-aria-labelledby="AsignarReporteLabel{{ forloop.counter }}" aria-hidden="true">
-<div class="modal-dialog modal-lg">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="AsignarReporteLabel{{ forloop.counter }}">Asignar Reporte</h5>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+                          <div class="mb-3">
+                            <label class="form-label">N° Reporte</label>
+                            <input
+                              type="number"
+                              readonly
+                              class="form-control"
+                              name="id_reporte"
+                              value="{{ p.data.0 }}"
+                            />
+                          </div>
 
-    <div class="mb-3">
-        <label class="form-label">N° Reporte</label>
-        <input type="number" readonly class="form-control" name="id_reporte" value="{{ p.data.0 }}">
-    </div>
+                          <div class="mb-3">
+                            <label class="form-label">Titulo</label>
+                            <input
+                              type=""
+                              readonly
+                              class="form-control"
+                              name="titulo"
+                              value="{{ p.data.1 }}"
+                            />
+                          </div>
 
-    <div class="mb-3">
-        <label class="form-label">Titulo</label>
-        <input type="" readonly class="form-control" name="titulo" value="{{ p.data.1 }}">
-    </div>
+                          <div class="mb-3">
+                            <label class="col-form-label">Descripcion</label>
+                            <textarea
+                              type=""
+                              readonly
+                              class="form-control"
+                              name="descripcion"
+                              rows="3"
+                            >
+{{ p.data.2 }}</textarea
+                            >
+                          </div>
+                          <div class="mb-3">
+                            <label class="col-form-label">Fecha Ingreso</label>
+                            <input
+                              type=""
+                              readonly
+                              class="form-control"
+                              name="fecha_ingreso"
+                              value="{{ p.data.3 }}"
+                            />
+                          </div>
+                          <div class="mb-3">
+                            <label class="col-form-label">Ingresado</label>
+                            <input
+                              type=""
+                              readonly
+                              class="form-control"
+                              name="usuario_usuario"
+                              value="{{ p.data.4 }}"
+                            />
+                          </div>
+                          <div class="mb-3">
+                            <label class="col-form-label">Prioridad</label>
+                            <input
+                              type=""
+                              readonly
+                              class="form-control"
+                              name="prioridad_id_prioridad"
+                              value="{{ p.data.5 }}"
+                            />
+                          </div>
 
-      <div class="mb-3">
-        <label class="col-form-label">Descripcion</label>
-        <textarea type="" readonly class="form-control" name="descripcion"  rows="3">{{ p.data.2 }}</textarea>
+                          <div class="mb-3">
+                            <label class="form-label">Piso</label>
+                            <input
+                              type=""
+                              readonly
+                              class="form-control"
+                              name="piso_id_piso"
+                              value="{{ p.data.6 }}"
+                            />
+                          </div>
 
+                          <div class="mb-3">
+                            <label class="form-label">Sector</label>
+                            <input
+                              type=""
+                              readonly
+                              class="form-control"
+                              name="sector_id_sector"
+                              value="{{ p.data.7 }}"
+                            />
+                          </div>
 
-</div>
-<div class="mb-3">
-        <label class="col-form-label">Fecha Ingreso</label>
-        <input type="" readonly class="form-control" name="fecha_ingreso" value="{{ p.data.3 }}">
+                          <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <input
+                              type=""
+                              readonly
+                              class="form-control"
+                              name="estado_r_id_estado"
+                              value="{{ p.data.8 }}"
+                            />
+                          </div>
 
+                          <div class="mb-3">
+                            <label class="form-label">Sucursal</label>
+                            <input
+                              type=""
+                              readonly
+                              class="form-control"
+                              name="sucursal_id_sucursal"
+                              value="{{ p.data.9 }}"
+                            />
+                          </div>
 
-</div>
-<div class="mb-3">
-        <label class="col-form-label">Ingresado</label>
-        <input type="" readonly class="form-control" name="usuario_usuario" value="{{ p.data.4 }}">
+                          <div class="mb-3">
+                            <label class="form-label">Asignado</label>
+                            <select class="form-control" name="asignado" id="">
+                              <option value="{{ p.data.11 }}">
+                                {{ p.data.11 }}
+                              </option>
+                              <option value="">vacio</option>
+                              {% for u in usuarios %}
+                              <!-- <input type="" class="form-control" name="cargo"> -->
+                              <option value="{{u.0}}">{{u.0}}</option>
+                              {% endfor %}
+                            </select>
+                            <!-- <input type=""  class="form-control" name="asignado" value="{{ p.data.11 }}"> -->
+                          </div>
 
-
-</div>
-<div class="mb-3">
-        <label class="col-form-label">Prioridad</label>
-        <input type="" readonly class="form-control"  name="prioridad_id_prioridad" value="{{ p.data.5 }}">
-      </div>
-
-
-      <div class="mb-3">
-        <label class="form-label">Piso</label>
-        <input type="" readonly class="form-control" name="piso_id_piso" value="{{ p.data.6 }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Sector</label>
-        <input type="" readonly class="form-control" name="sector_id_sector" value="{{ p.data.7 }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Estado</label>
-        <input type="" readonly class="form-control" name="estado_r_id_estado" value="{{ p.data.8 }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Sucursal</label>
-        <input type="" readonly class="form-control" name="sucursal_id_sucursal" value="{{ p.data.9 }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Asignado</label>
-        <select class="form-control" name="asignado" id="">
-          
-          <option value="{{ p.data.11 }}">{{ p.data.11 }}</option>
-          <option value="">vacio</option>
-            {% for u in usuarios %}
-            <!-- <input type="" class="form-control" name="cargo"> -->
-            <option value="{{u.0}}">{{u.0}}</option>
-            {% endfor %}
-        </select>
-        <!-- <input type=""  class="form-control" name="asignado" value="{{ p.data.11 }}"> -->
-      </div>
-
-      <!-- <div class="mb-3">
+                          <!-- <div class="mb-3">
         <label for="formFile" class="form-label"></label>
         <input class="form-control" type="file" name="imagen">
         
       </div> -->
 
-      <div class="modal-footer">
-        <input type="hidden" name="accion" value="asignar">
-        <button type="submit" class="btn btn-primary">Submit</button>
+                          <div class="modal-footer">
+                            <input
+                              type="hidden"
+                              name="accion"
+                              value="asignar"
+                            />
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-dismiss="modal"
+                            >
+                              Cerrar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                              Asignar
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fin del modal asignar reporte -->
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-
-
-
-</form>
-
-
-
     </div>
-  </div>
-</div>
-</div>
 
+    <!-- Inicio del modal ingresar reporte -->
+    <div
+      class="modal fade"
+      id="staticBackdrop"
+      data-backdrop="static"
+      data-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Ingresar Reporte
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
 
-<!-- Fin del modal asignar reporte -->
-
-
-
-            </td>
-          </tr>
-          {% endfor %}
-
-
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-
-  <!-- Inicio del modal ingresar reporte -->
-  <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Ingresar Reporte</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        <!-- <div class="mb-3">
+              <!-- <div class="mb-3">
             <label class="form-label">Id</label>
             <input type="" class="form-control" name="id_reporte">
         </div> -->
 
-        <div class="mb-3">
-            <label class="form-label">Titulo <span class="text-danger">*</span></label>
-            <input type="" required class="form-control"  name="titulo">
-        </div>
+              <div class="mb-3">
+                <label class="form-label"
+                  >Titulo <span class="text-danger">*</span></label
+                >
+                <input type="" required class="form-control" name="titulo" />
+              </div>
 
-          <div class="mb-3">
-            <label class="col-form-label">Descripcion <span class="text-danger">*</span></label>
-            <textarea type="text" required class="form-control" name="descripcion" rows="3"></textarea>
-
-
-</div>
-<!-- <div class="mb-3">
+              <div class="mb-3">
+                <label class="col-form-label"
+                  >Descripcion <span class="text-danger">*</span></label
+                >
+                <textarea
+                  type="text"
+                  required
+                  class="form-control"
+                  name="descripcion"
+                  rows="3"
+                ></textarea>
+              </div>
+              <!-- <div class="mb-3">
             <label class="col-form-label">Fecha Ingreso</label>
             <input type="" class="form-control" name="fecha_ingreso">
 
 
 </div> -->
-<!-- <div class="mb-3">
+              <!-- <div class="mb-3">
             <label class="col-form-label">Ingresado</label>
             <input type="text" class="form-control" name="usuario_usuario">
 
 
 </div> -->
 
-<div class="mb-3">
-  <label class="form-label">Reportado por <span class="text-danger">*</span></label>
-  <select class="form-control" required name="usuario_usuario" id="">
-    
+              <div class="mb-3">
+                <label class="form-label"
+                  >Reportado por <span class="text-danger">*</span></label
+                >
+                <select
+                  class="form-control"
+                  required
+                  name="usuario_usuario"
+                  id=""
+                >
+                  <option value="">Seleccionar</option>
+                  {% for u in usuarios %}
+                  <!-- <input type="" class="form-control" name="cargo"> -->
+                  <option value="{{u.0}}">{{u.0}}</option>
+                  {% endfor %}
+                </select>
+                <!-- <input type=""  class="form-control" name="asignado" value="{{ p.data.11 }}"> -->
+              </div>
 
-    <option value="">Seleccionar </option>
-      {% for u in usuarios %}
-      <!-- <input type="" class="form-control" name="cargo"> -->
-      <option value="{{u.0}}">{{u.0}}</option>
-      {% endfor %}
-  </select>
-  <!-- <input type=""  class="form-control" name="asignado" value="{{ p.data.11 }}"> -->
-</div>
+              <div class="mb-3">
+                <label class="form-label"
+                  >Prioridad <span class="text-danger">*</span></label
+                >
+                <select
+                  class="form-control"
+                  required
+                  name="prioridad_id_prioridad"
+                  id=""
+                >
+                  <option>Seleccionar</option>
+                  {% for pr in prioridad %}
+                  <option value="{{pr.0}}">{{pr.1}}</option>
 
-<div class="mb-3">
-  <label class="form-label">Prioridad <span class="text-danger">*</span></label>
-  <select class="form-control" required name="prioridad_id_prioridad" id="">
-      <option >Seleccionar</option>
-      {% for pr in prioridad %}
-      <option value="{{pr.0}}">{{pr.1}}</option>
+                  {% endfor %}
+                </select>
+              </div>
 
-      {% endfor %}
-  </select>
-</div>
-
-<!-- <div class="mb-3">
+              <!-- <div class="mb-3">
             <label class="col-form-label">Prioridad</label>
             <input type="" class="form-control"  name="prioridad_id_prioridad">
           </div> -->
 
-
-          <!-- <div class="mb-3">
+              <!-- <div class="mb-3">
             <label class="form-label">Piso</label>
             <input type="" class="form-control" name="piso_id_piso">
           </div> -->
-          <div class="mb-3">
-            <label class="form-label">Piso <span class="text-danger">*</span></label>
-            <select class="form-control" required name="piso_id_piso" id="">
-                <option >Seleccionar</option>
-                {% for pi in piso %}
-                <option value="{{pi.0}}">{{pi.1}}</option>
-          
-                {% endfor %}
-            </select>
-          </div>
+              <div class="mb-3">
+                <label class="form-label"
+                  >Piso <span class="text-danger">*</span></label
+                >
+                <select class="form-control" required name="piso_id_piso" id="">
+                  <option>Seleccionar</option>
+                  {% for pi in piso %}
+                  <option value="{{pi.0}}">{{pi.1}}</option>
 
-          <!-- <div class="mb-3">
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- <div class="mb-3">
             <label class="form-label">Sector</label>
             <input type="" class="form-control" name="sector_id_sector">
           </div> -->
 
-          <div class="mb-3">
-            <label class="form-label">Sector <span class="text-danger">*</span></label>
-            <select class="form-control" required name="sector_id_sector" id="">
-                <option >Seleccionar</option>
-                {% for se in sector %}
-                <option value="{{se.0}}">{{se.1}}</option>
-          
-                {% endfor %}
-            </select>
-          </div>
+              <div class="mb-3">
+                <label class="form-label"
+                  >Sector <span class="text-danger">*</span></label
+                >
+                <select
+                  class="form-control"
+                  required
+                  name="sector_id_sector"
+                  id=""
+                >
+                  <option>Seleccionar</option>
+                  {% for se in sector %}
+                  <option value="{{se.0}}">{{se.1}}</option>
 
-          <!-- <div class="mb-3">
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- <div class="mb-3">
             <label class="form-label">Estado</label>
             <input type="" class="form-control" name="estado_r_id_estado">
           </div> -->
 
-          <div class="mb-3">
-            <label class="form-label">Estado <span class="text-danger">*</span></label>
-            <select class="form-control" required name="estado_r_id_estado" id="">
-                <option >Seleccionar</option>
-                {% for es in estado %}
-                <option value="{{es.0}}">{{es.1}}</option>
-          
-                {% endfor %}
-            </select>
-          </div>
+              <div class="mb-3">
+                <label class="form-label"
+                  >Estado <span class="text-danger">*</span></label
+                >
+                <select
+                  class="form-control"
+                  required
+                  name="estado_r_id_estado"
+                  id=""
+                >
+                  <option>Seleccionar</option>
+                  {% for es in estado %}
+                  <option value="{{es.0}}">{{es.1}}</option>
 
-          <!-- <div class="mb-3">
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- <div class="mb-3">
             <label class="form-label">Sucursal</label>
             <input type="" class="form-control" name="sucursal_id_sucursal">
           </div> -->
 
-          <div class="mb-3">
-            <label class="form-label">Sucursal <span class="text-danger">*</span></label>
-            <select class="form-control" required name="sucursal_id_sucursal" id="">
-                <option >Seleccionar</option>
-                {% for s in sucursal %}
-                <option value="{{s.0}}">{{s.1}}</option>
+              <div class="mb-3">
+                <label class="form-label"
+                  >Sucursal <span class="text-danger">*</span></label
+                >
+                <select
+                  class="form-control"
+                  required
+                  name="sucursal_id_sucursal"
+                  id=""
+                >
+                  <option>Seleccionar</option>
+                  {% for s in sucursal %}
+                  <option value="{{s.0}}">{{s.1}}</option>
 
-                {% endfor %}
-            </select>
-        </div>
-
-
-
-          <div class="mb-3">
-            <label class="form-label">Foto de empleado (Opcional)</label>
-            <div class="custom-file">
-                <input type="file" class="custom-file-input"  name="imagen" accept="image/jpeg" >
-                <label class="custom-file-label">Seleccionar archivo...</label>
+                  {% endfor %}
+                </select>
               </div>
 
-        </div>
-        <div class="modal-footer">
-          <!-- <div class="mb-3">
+              <div class="mb-3">
+                <label class="form-label">Foto de empleado (Opcional)</label>
+                <div class="custom-file">
+                  <input
+                    type="file"
+                    class="custom-file-input"
+                    name="imagen"
+                    accept="image/jpeg"
+                  />
+                  <label class="custom-file-label"
+                    >Seleccionar archivo...</label
+                  >
+                </div>
+              </div>
+              <div class="modal-footer">
+                <!-- <div class="mb-3">
             <label class="form-label">Asignado</label>
             <input type="" class="form-control" name="asignado">
           </div> -->
-          <input type="hidden" name="accion" value="nuevo">
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-
-
-
-    </form>
-
-
-
+                <input type="hidden" name="accion" value="nuevo" />
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                >
+                  Cerrar
+                </button>
+                <button type="submit" class="btn btn-primary">Ingresar</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
-
-
-</div>
 </div>
 {% endblock %}

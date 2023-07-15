@@ -160,7 +160,7 @@
                                                         <label class="col-form-label">Cargo <span class="text-danger">*</span></label>
                                                         <select class="form-control" required name="cargo" id="">
 
-                                                            <option value="{{p.data.7}}">{{p.data.7}}</option>
+                                                            <option value="{{p.data.7}}">{{p.data.11}}</option>
                                                             {% for c in cargo %}
                                                             <!-- <input type="" class="form-control" name="cargo"> -->
                                                             <option value="{{c.0}}">{{c.1}}</option>
@@ -172,7 +172,7 @@
                                                     <div class="mb-3">
                                                         <label class="form-label">Sucursal <span class="text-danger">*</span></label>
                                                         <select class="form-control" required name="sucursal" id="">
-                                                            <option value="{{p.data.8}}">{{p.data.8}}</option>
+                                                            <option value="{{p.data.8}}">{{p.data.13}}</option>
                                                             {% for c in sucursal %}
                                                             <option value="{{c.0}}">{{c.1}}</option>
 
@@ -192,8 +192,9 @@
 
 
                                                     <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                                                         <input type="hidden" required name="accion" value="modificar">
-                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                        <button type="submit" class="btn btn-primary">Modificar</button>
                                                     </div>
                                                     
                                                 </form>
@@ -352,7 +353,7 @@
 
                         <input type="hidden" name="accion" value="nuevo">
 
-                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Ingresar</button>
 
 
